@@ -1,0 +1,1 @@
+source symphony/bin/activate
