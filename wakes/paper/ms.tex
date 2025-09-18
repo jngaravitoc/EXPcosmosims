@@ -1,0 +1,1395 @@
+%% Beginning of file 'sample631.tex'
+%%
+%% Modified 2022 May  
+%%
+%% This is a sample manuscript marked up using the
+%% AASTeX v6.31 LaTeX 2e macros.
+%%
+%% AASTeX is now based on Alexey Vikhlinin's emulateapj.cls 
+%% (Copyright 2000-2015).  See the classfile for details.
+
+%% AASTeX requires revtex4-1.cls and other external packages such as
+%% latexsym, graphicx, amssymb, longtable, and epsf.  Note that as of 
+%% Oct 2020, APS now uses revtex4.2e for its journals but remember that 
+%% AASTeX v6+ still uses v4.1. All of these external packages should 
+%% already be present in the modern TeX distributions but not always.
+%% For example, revtex4.1 seems to be missing in the linux version of
+%% TexLive 2020. One should be able to get all packages from www.ctan.org.
+%% In particular, revtex v4.1 can be found at 
+%% https://www.ctan.org/pkg/revtex4-1.
+
+%% The first piece of markup in an AASTeX v6.x document is the \documentclass
+%% command. LaTeX will ignore any data that comes before this command. The 
+%% documentclass can take an optional argument to modify the output style.
+%% The command below calls the preprint style which will produce a tightly 
+%% typeset, one-column, single-spaced document.  It is the default and thus
+%% does not need to be explicitly stated.
+%%
+%% using aastex version 6.3
+\documentclass[twocolumn, linenumbers]{openjournal}
+
+%% The default is a single spaced, 10 point font, single spaced article.
+%% There are 5 other style options available via an optional argument. They
+%% can be invoked like this:
+%%
+%% \documentclass[arguments]{aastex631}
+%% 
+%% where the layout options are:
+%%
+%%  twocolumn   : two text columns, 10 point font, single spaced article.
+%%                This is the most compact and represent the final published
+%%                derived PDF copy of the accepted manuscript from the publisher
+%%  manuscript  : one text column, 12 point font, double spaced article.
+%%  preprint    : one text column, 12 point font, single spaced article.  
+%%  preprint2   : two text columns, 12 point font, single spaced article.
+%%  modern      : a stylish, single text column, 12 point font, article with
+%% 		  wider left and right margins. This uses the Daniel
+%% 		  Foreman-Mackey and David Hogg design.
+%%  RNAAS       : Supresses an abstract. Originally for RNAAS manuscripts 
+%%                but now that abstracts are required this is obsolete for
+%%                AAS Journals. Authors might need it for other reasons. DO NOT
+%%                use \begin{abstract} and \end{abstract} with this style.
+%%
+%% Note that you can submit to the AAS Journals in any of these 6 styles.
+%%
+%% There are other optional arguments one can invoke to allow other stylistic
+%% actions. The available options are:
+%%
+%%   astrosymb    : Loads Astrosymb font and define \astrocommands. 
+%%   tighten      : Makes baselineskip slightly smaller, only works with 
+%%                  the twocolumn substyle.
+%%   times        : uses times font instead of the default
+%%   linenumbers  : turn on lineno package.
+%%   trackchanges : required to see the revision mark up and print its output
+%%   longauthor   : Do not use the more compressed footnote style (default) for 
+%%                  the author/collaboration/affiliations. Instead print all
+%%                  affiliation information after each name. Creates a much 
+%%                  longer author list but may be desirable for short 
+%%                  author papers.
+%% twocolappendix : make 2 column appendix.
+%%   anonymous    : Do not show the authors, affiliations and acknowledgments 
+%%                  for dual anonymous review.
+%%
+%% these can be used in any combination, e.g.
+%%
+%% \documentclass[twocolumn,linenumbers,trackchanges]{aastex631}
+%%
+%% AASTeX v6.* now includes \hyperref support. While we have built in specific
+%% defaults into the classfile you can manually override them with the
+%% \hypersetup command. For example,
+%%
+%% \hypersetup{linkcolor=red,citecolor=green,filecolor=cyan,urlcolor=magenta}
+%%
+%% will change the color of the internal links to red, the links to the
+%% bibliography to green, the file links to cyan, and the external links to
+%% magenta. Additional information on \hyperref options can be found here:
+%% https://www.tug.org/applications/hyperref/manual.html#x1-40003
+%%
+%% Note that in v6.3 "bookmarks" has been changed to "true" in hyperref
+%% to improve the accessibility of the compiled pdf file.
+%%
+%% If you want to create your own macros, you can do so
+%% using \newcommand. Your macros should appear before
+%% the \begin{document} command.
+%%
+\newcommand{\vdag}{(v)^\dagger}
+\newcommand{\aastex}{AAS\TeX}
+\newcommand{\latex}{La\TeX}
+\newcommand{\orcidauthor}[3]{\author{\href{http://orcid.org/#1}{#2$^{#3}$}}}
+\newcommand{\mwest}{\textsc{MWest }}
+\newcommand{\symphony}{\textsc{SymphonyMilkyWay }}
+\newcommand{\expcode}{\textsc{EXP }}
+
+
+
+\usepackage{amsmath}
+\usepackage[x11names]{xcolor}
+\usepackage[breaklinks,colorlinks,citecolor=blue,urlcolor=blue]{hyperref}
+%% Reintroduced the \received and \accepted commands from AASTeX v5.2
+%\received{March 1, 2021}
+%\revised{April 1, 2021}
+%\accepted{\today}
+
+%% Command to document which AAS Journal the manuscript was submitted to.
+%% Adds "Submitted to " the argument.
+%\submitjournal{PSJ}
+
+%% For manuscript that include authors in collaborations, AASTeX v6.31
+%% builds on the \collaboration command to allow greater freedom to 
+%% keep the traditional author+affiliation information but only show
+%% subsets. The \collaboration command now must appear AFTER the group
+%% of authors in the collaboration and it takes TWO arguments. The last
+%% is still the collaboration identifier. The text given in this
+%% argument is what will be shown in the manuscript. The first argument
+%% is the number of author above the \collaboration command to show with
+%% the collaboration text. If there are authors that are not part of any
+%% collaboration the \nocollaboration command is used. This command takes
+%% one argument which is also the number of authors above to show. A
+%% dashed line is shown to indicate no collaboration. This example manuscript
+%% shows how these commands work to display specific set of authors 
+%% on the front page.
+%%
+%% For manuscript without any need to use \collaboration the 
+%% \AuthorCollaborationLimit command from v6.2 can still be used to 
+%% show a subset of authors.
+%
+%\AuthorCollaborationLimit=2
+%
+%% will only show Schwarz & Muench on the front page of the manuscript
+%% (assuming the \collaboration and \nocollaboration commands are
+%% commented out).
+%%
+%% Note that all of the author will be shown in the published article.
+%% This feature is meant to be used prior to acceptance to make the
+%% front end of a long author article more manageable. Please do not use
+%% this functionality for manuscripts with less than 20 authors. Conversely,
+%% please do use this when the number of authors exceeds 40.
+%%
+%% Use \allauthors at the manuscript end to show the full author list.
+%% This command should only be used with \AuthorCollaborationLimit is used.
+
+%% The following command can be used to set the latex table counters.  It
+%% is needed in this document because it uses a mix of latex tabular and
+%% AASTeX deluxetables.  In general it should not be needed.
+%\setcounter{table}{1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% The following section outlines numerous optional output that
+%% can be displayed in the front matter or as running meta-data.
+%%
+%% If you wish, you may supply running head information, although
+%% this information may be modified by the editorial offices.
+%\shorttitle{AASTeX v6.3.1 Sample article}
+%\shortauthors{Schwarz et al.}
+%%
+%% You can add a light gray and diagonal water-mark to the first page 
+%% with this command:
+%% \watermark{text}
+%% where "text", e.g. DRAFT, is the text to appear.  If the text is 
+%% long you can control the water-mark size with:
+%% \setwatermarkfontsize{dimension}
+%% where dimension is any recognized LaTeX dimension, e.g. pt, in, etc.
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\graphicspath{{./}{figures/}}
+%% This is the end of the preamble.  Indicate the beginning of the
+%% manuscript itself with \begin{document}.
+
+\begin{document}
+
+\title{The Milky Way-est response to the LMC's passage in a cosmological context}
+%\title{FIRE {$\times$} EXP: How filaments and satellites shape halos}
+
+%\title{Satellite-Halo interaction in a cosmological context III: On the shape of the host}
+%\title{OnSatellite-Halo interaction in a cosmological context IV: Loopsided }
+
+
+%% LaTeX will automatically break titles if they run longer than
+%% one line. However, you may use \\ to force a line break if
+%% you desire. In v6.31 you can include a footnote in the title.
+
+%% A significant change from earlier AASTEX versions is in the structure for 
+%% calling author and affiliations. The change was necessary to implement 
+%% auto-indexing of affiliations which prior was a manual process that could 
+%% easily be tedious in large author manuscripts.
+%%
+%% The \author command is the same as before except it now takes an optional
+%% argument which is the 16 digit ORCID. The syntax is:
+%% \author[xxxx-xxxx-xxxx-xxxx]{Author Name}
+%%
+%% This will hyperlink the author name to the author's ORCID page. Note that
+%% during compilation, LaTeX will do some limited checking of the format of
+%% the ID to make sure it is valid. If the "orcid-ID.png" image file is 
+%% present or in the LaTeX pathway, the OrcID icon will appear next to
+%% the authors name.
+%%
+%% Use \affiliation for affiliation information. The old \affil is now aliased
+%% to \affiliation. AASTeX v6.31 will automatically index these in the header.
+%% When a duplicate is found its index will be the same as its previous entry.
+%%
+%% Note that \altaffilmark and \altaffiltext have been removed and thus 
+%% can not be used to document secondary affiliations. If they are used latex
+%% will issue a specific error message and quit. Please use multiple 
+%% \affiliation calls for to document more than one affiliation.
+%%
+%% The new \altaffiliation can be used to indicate some secondary information
+%% such as fellowships. This command produces a non-numeric footnote that is
+%% set away from the numeric \affiliation footnotes.  NOTE that if an
+%% \altaffiliation command is used it must come BEFORE the \affiliation call,
+%% right after the \author command, in order to place the footnotes in
+%% the proper location.
+%%
+%% Use \email to set provide email addresses. Each \email will appear on its
+%% own line so you can put multiple email address in one \email call. A new
+%% \correspondingauthor command is available in V6.31 to identify the
+%% corresponding author of the manuscript. It is the author's responsibility
+%% to make sure this name is also in the author list.
+%%
+%% While authors can be grouped inside the same \author and \affiliation
+%% commands it is better to have a single author for each. This allows for
+%% one to exploit all the new benefits and should make book-keeping easier.
+%%
+%% If done correctly the peer review system will be able to
+%% automatically put the author and affiliation information from the manuscript
+%% and save the corresponding author the trouble of entering it by hand.
+
+
+
+\orcidauthor{0000-0003-3729-1684}{Elise Darragh-Ford}{1, 2, 3}
+\orcidauthor{0000-0001-7107-1744}{Nicolás Garavito-Camargo}{4, 12, *}
+\orcidauthor{0000-0002-8354-7356}{Arpit Arora}{5}
+\orcidauthor{0000-0003-2229-011X}{Risa Weschler}{1, 2, 3}
+\orcidauthor{0000-0001-6244-6727}{Kathryn V. Johnston}{9}
+\orcidauthor{0000-0002-6810-1110}{Facundo A. G\'omez}{6, 7}
+\orcidauthor{0000-0002-6810-1110}{Martin D. Weinberg}{8}
+\orcidauthor{0000-0002-1182-3825}{Ethan Nadler}{10}
+\orcidauthor{0000-0001-9863-5394}{Phil Mansfield}{1, 3}
+\orcidauthor{0000-0002-1200-0820}{Yao-Yuan Mao}{11}
+\orcidauthor{0000-0002-6810-1110}{Silvio Varela}{6, 7}
+\orcidauthor{0000-0003-0715-2173}{Gurtina Besla}{12}
+\orcidauthor{0000-0003-1517-3935}{Michael S. Petersen}{13}
+\orcidauthor{}{Emily C. Cunnigham}{9}
+\orcidauthor{0000-0003-3939-3297}{Robyn Sanderson}{14}
+\orcidauthor{0000-0002-6810-1110}{Chervin F. P. Laporte}{15}
+\orcidauthor{0000-0002-6635-4712}{Deveshi Buch}{1, 16}
+
+\affiliation{$^{1}$Kavli Institute for Particle Astrophysics \& Cosmology, P. O. Box 2450, Stanford University, Stanford, CA 94305, USA}
+\affiliation{$^{2}$Department of Physics, Stanford University, 382 Via Pueblo Mall, Stanford, CA 94305, USA}
+\affiliation{$^{3}$SLAC National Accelerator Laboratory, Menlo Park, CA 94025, USA}
+\affiliation{$^{4}$Center for Computational Astrophysics, Flatiron Institute, 162 5th Ave, New York, NY 10010, USA}
+\affiliation{$^{5}$Department of Astronomy, University of Washington, Seattle, WA 98195, USA }
+\affiliation{$^{6}$Departamento de F\'isica y Astronom\'ia, Universidad de La Serena, Av. Juan Cisternas 1200 Norte, La Serena, Chile}
+\affiliation{$^{7}$Instituto de Investigaci\'on Multidisciplinar en Ciencia y Tecnolog\'ia, Universidad de La Serena, Ra\'ul Bitr\'an 1305, La Serena, Chile}
+\affiliation{$^{8}$Department of Astronomy, University of Massachusetts at Amherst, 710 North Pleasant Street, Amherst, MA 01003, USA}
+\affiliation{$^{9}$Department of Astronomy, Columbia University, 550 West 120th Street, New York, NY, 10027, USA}
+\affiliation{$^{10}$Department of Astronomy \& Astrophysics, University of California, San Diego, La Jolla, CA 92093, USA}
+\affiliation{$^{11}$Department of Physics and Astronomy, University of Utah, Salt Lake City, UT 84112, USA}
+\affiliation{$^{12}$Steward Observatory, University of Arizona, 933 North Cherry Avenue, Tucson, AZ 85721, USA}
+\affiliation{$^{14}$Department of Physics \& Astronomy, University of Pennsylvania, 209 S 33rd St, Philadelphia, PA 19104, USA}
+\affiliation{$^{13}$Institute for Astronomy, University of Edinburgh, Royal Observatory, Blackford Hill, Edinburgh EH9 3HJ, UK}
+\affiliation{$^{15}$Institut de Ciències del Cosmos (ICCUB), Universitat de Barcelona (UB), Mart\'i i Franquès, 1, 08028 Barcelona, Spain}
+\affiliation{$^{16}$Department of Computer Science, Stanford University, 353 Jane Stanford Way, Stanford, CA 94305, USA}
+\thanks{$^*$Corresponding author: \href{mailto:ngaravito@flatironinstitute.org}{ngaravito@flatironinstitute.org}},
+
+
+% Possible referees: Jason Sander, Andrei Kratsov, Benedikt Diemmer, Frank Van Den Bosch, Alis Deason
+% For next round of comments sent to: Risa, Facundo, KVJ, Kathryn, Arpit, Robyn, Gurtina, Chervin, Mike, and Martin
+
+
+%% Note that the \and command from previous versions of AASTeX is now
+%% depreciated in this version as it is no longer necessary. AASTeX 
+%% automatically takes care of all commas and "and"s between authors names.
+
+%% AASTeX 6.31 has the new \collaboration and \nocollaboration commands to
+%% provide the collaboration status of a group of authors. These commands 
+%% can be used either before or after the list of corresponding authors. The
+%% argument for \collaboration is the collaboration identifier. Authors are
+%% encouraged to surround collaboration identifiers with ()s. The 
+%% \nocollaboration command takes no argument and exists to indicate that
+%% the nearby authors are not part of surrounding collaborations.
+
+%% Mark off the abstract in the ``abstract'' environment. 
+\begin{abstract}
+
+The Large Magellanic/Milky Cloud (LMC), which is believed to be on first infall into the Milky Way (MW), 
+is expected to induce a large-scale dynamical response in the MW's dark matter halo. Theoretically, the 
+specific structure and orientation of this wake should depend on the mass of the satellite, its orbit, 
+and the structure of the MW's dark matter halo prior to LMC infall. Here, we study this dependence using 
+eighteen MW--LMC-like mergers from the Milky Way-est suite of cosmological, dark-matter-only, 
+zoom-in simulations. By performing a basis function expansion of the MW analogues, we find that 
+LMC-like mergers excite a large-scale dipole and weaker quadrupole response in the dark matter halo. 
+The dipole peaks shortly after the LMC pericenter and is anti-aligned in the halo with the pericenter 
+of the LMC. The quadrupole begins aligned with the large-scale structure surrounding the MW halo; 
+during the interaction, it is enhanced and torqued in the direction of the plane of the LMC's orbit 
+but remains highly subdominant to the dipole response. The strength of the halo response, which depends 
+not only on the physical and dynamical properties of the LMC analog but also on the pre-existing halo 
+shape, spans the range of values previously measured in the MW and from idealized simulations of a 
+MW--LMC-like merger. Based on the LMC orbit and history, the collective response will likely not peak 
+in the MW for another $\sim 500$ Myrs. 
+
+
+\end{abstract}
+
+%% Keywords should appear after the \end{abstract} command. 
+%% The AAS Journals now uses Unified Astronomy Thesaurus concepts:
+%% https://astrothesaurus.org
+%% You will be asked to selected these concepts during the submission process
+%% but this old "keyword" functionality is maintained in case authors want
+%% to include these concepts in their preprints.
+\keywords{}
+
+%% From the front matter, we move on to the body of the paper.
+%% Sections are demarcated by \section and \subsection, respectively.
+%% Observe the use of the LaTeX \label
+%% command after the \subsection to give a symbolic KEY to the
+%% subsection for cross-referencing in a \ref command.
+%% You can use LaTeX's \ref and \label commands to keep track of
+%% cross-references to sections, equations, tables, and figures.
+%% That way, if you change the order of any elements, LaTeX will
+%% automatically renumber them.
+%%
+%% We recommend that authors also use the natbib \citep
+%% and \citet commands to identify citations.  The citations are
+%% tied to the reference list via symbolic KEYs. The KEY corresponds
+%% to the KEY in the \bibitem in the reference list below. 
+
+\section{Introduction:}\label{sec:intro}
+
+
+The motion of stars in galaxies provides a unique avenue to measure the underlying
+gravitational potential of the galaxy. For example, rotation curve measurements allow us to
+probe the radial distribution and amount of mass contained in dark matter (DM) in galaxies' halos
+\citep[e.g.,][]{Eilers_19}.  Global properties of DM halos --- such as their shapes and density
+profiles --- are sensitive to the nature of the dark matter particle and hence serve as indirect 
+probes of the DM particle at galactic scales \citep[e.g.,][]{Despali_22, Vargya_22, Gonzalez_24}.
+
+Most of the methods used to measure the shape and density distribution of DM rely on assumptions of
+dynamical equilibrium and axisymmetric potentials \citep[e.g.,][]{Prada_19, Emami_21}, which are 
+expected to apply when the galaxy's potential evolves adiabatically. However, all galaxies are 
+expected to undergo mergers, during which the systems are in dynamical disequilibrium (the system 
+does not evolve adiabatically). During such periods, the nature of the DM particle manifests in the 
+way the halos respond to the merger. This response can enable other avenues for constraining DM models 
+using global halo properties \citep[e.g.,][]{Furlanetto02}. 
+
+In the Cold Dark Matter (CDM) paradigm, the interaction between satellite galaxies and their host has 
+been studied in detail \citep[e.g,][]{Weinberg98, Choi09, choiphdt, Trelles22}. The response of the 
+host can be separated into two effects. As the satellite orbits the halo, it induces a large-scale 
+DM wake in the host halo \citep[e.g.,][]{TW84, Ogiya_16}. Part of this wake, which trails the orbit
+of the satellite, was first described by~\cite{Chandrasekhar1943} (here referred to as the dynamical 
+friction wake). Several studies have explored how the properties of the dynamical friction wake 
+change in different DM models \citep[e.g., ][]{lancaster20, Foote_23}. In addition, as the 
+satellite approaches its first pericenter, it displaces the center of mass (COM) of the host, 
+inducing an offset in both positions and velocities between the inner and outer halo. This results 
+in a large-scale density dipole in the outer halo across the sky in the galactocentric reference 
+frame, called the `Collective response'. Both the dynamical friction wake and COM displacement 
+persist for many dynamical times until the host halo relaxes, but the amplitude of both effects 
+is larger during the first pericentric passage of the satellite \citep[e.g.,][]{Weinberg_23}.
+
+In the Local Group (LG), both the Milky Way (MW) and Andromeda are accreting massive 
+satellites and therefore are ideal candidates for detecting halo responses. In the MW, 
+the LMC is likely on its first infall into the MW \citep{besla07, Kallivayalil13} and has 
+a mass of $\approx$10~\%  of that of the MW \citep{Watkins_24}. It is thus 
+understood to be perturbing the MW's halo and therefore inducing a wake in the 
+DM halo \citep[e.g.,][]{garavito_19, Tamfal_21, Simon_22}. Thanks to recent 6D 
+kinematic measurements of the stars in the halo from surveys such as Gaia, SDSS, 
+WISE, $S^5$, perturbations from the LMC  have been observed in the MW's stellar 
+halo --- which traces the DM halo --- and in stellar streams \citep{Shipp19, Koposov19}. 
+Maps of stars in the outer halo have revealed an overdensity trailing the orbit of the LMC as 
+would be expected from the dynamical friction wake \citep{belokurov19, Conroy_2021, Fushimi_23, Amarante_24}. 
+Evidence for the collective response in the density of stars in the outer halo is still under debate 
+as there are substructures in the stellar halo that could mimic similar stellar overdensities 
+\citep{Cunninghnam_20, Amarante_24}. Meanwhile, evidence of the motion of the inner halo has 
+also been observed in the mean velocities of the stars in the outer halo 
+\citep{Petersen_21, Erkal_21, Yaaqib_24}. For a comprehensive review of the MW--LMC interaction, 
+we refer the reader to~\cite{Vasiliev_23review}. 
+
+Idealized N-body simulations have predicted the properties of the MW's halo response to the 
+LMC's first infall passage \citep{Mastropietro05, Gomez15, laporte17, Petersen_20, Garavito_Camargo_2021, 
+Vasiliev_21, Lilleengen_23, vasiliev2023dear, Sheng_24}. 
+In the idealized simulations, the dynamical friction wake induces an overdensity of 
+DM particles of $\approx$30\%  relative to an unperturbed MW halo.  However, these values 
+are sensitive to the MW/LMC mass ratio, the orbit of the LMC, the kinematic structure of the 
+DM halo \citep{Garavito_Camargo_2021, Simon_22, Vasiliev_23review, Sheng_24}, and halo shape
+\citep{Sheng_24}. Moreover, in the cosmological context, the situation is expected to be much 
+more complex. DM halos reside within the cosmic web where several processes take place 
+simultaneously, and the properties of the halos, such as shape and kinematic structure, are not
+as simple. For example, halos in cosmological simulations have filamentary accretion, substructure
+that induces non-axisymmetric shapes, and figure rotation \citep{Valluri_21, Ash23}, none of which
+exist in idealized simulations. In this paper, we study the properties of the halo response of
+MW-like galaxies to LMC-like satellites in a cosmological context using the Milky Way-est suite
+of zoom-in cosmological simulations consisting of MW--LMC satellite analogs. We ask to what
+extent the description developed in the idealized simulations can be simply applied.
+
+Analyzing the response of DM halos requires a description of the density and potential field of 
+the halo as a function of time. This is a difficult task in cosmological simulations due to the 
+presence of substructure and the asymmetric shape of the halos. To overcome this, we make use of 
+the \textsc{Symfind} halo finder \citep{mansfield2023symfind} to remove the majority of the subhalos, 
+and we employ a basis function expansions (hereafter BFE) using \expcode \citep{EXP} to compute the density 
+field and potential of the smoothed DM halo.  
+
+{\color{DarkSeaGreen4} Outline advantages of BFE: 1. represent the fields accuratetly, 2. Visualization, 
+3. Decompose the response. 4) Compress information}
+%- Cunnigham+20 (\href{https://ui.adsabs.harvard.edu/abs/2020ApJ...898....4C/abstract)\%E2\%86\%92}{https://ui.adsabs.harvard.edu/abs/2020ApJ...898....4C/abstract)→} quantify velocity field halo response due to the LMC compared to simulations with substructure.
+%- Rain+23 (\href{https://ui.adsabs.harvard.edu/abs/2023A\%26A...680A..91K/abstract}{https://ui.adsabs.harvard.edu/abs/2023A\%26A...680A..91K/abstract}) — > need to review
+%- Noah+24 (\href{https://ui.adsabs.harvard.edu/abs/2024PhRvD.109f3501G/abstract}{https://ui.adsabs.harvard.edu/abs/2024PhRvD.109f3501G/abstract}) —> need to review
+
+%Other impacts of the wakes: 
+%- varela+23\href{https://ui.adsabs.harvard.edu/abs/2023MNRAS.523.5853V/abstract}{ https://ui.adsabs.harvard.edu/abs/2023MNRAS.523.5853V/abstract} : Wakes affect disk and can create loopsided galaxies
+
+
+\section{Simulations and Methods:}\label{sec:methods}
+
+N-body simulations have been very successful at representing 
+the observed properties of galaxies (references). State-of-the-art N-body simulations are
+ becoming increasingly realistic in representing all the physical processes that drive the 
+ dynamical evolution of a galaxy. However, we still lack a framework that connects the evolution 
+ of simulated galaxies with the dynamical theory of how self-gravitating systems evolve.
+
+ Basis Function Expansions (BFE) offer that connection and provide a language to describe 
+ the dynamics of galaxies. By projecting the phase-space coordinates of the particle data 
+ from a simulation into a set of basis functions, the structure of the self-gravitating system 
+ is decomposed into its modal structure, as in analytical perturbation theory. In the BFE framework, 
+ one describes the evolution of the main modes of a galaxy, such as the monopoles or dipoles, 
+ to characterize the dynamical state of the system. This langauge and method is useful to compare not only between 
+different halos, but also between different DM models, which will be work for future contributions. 
+BFE can be use to both simulate the evolution of galaxies, but also 
+to analyze pre-existing N-body simulations. n this work, we will use BFE to understand and decompose the 
+response of a CDM halo to an LMC-like satellite in the \mwest and \symphony suites. 
+
+In the subsequent subsections, we describe the properties of the \mwest and \symphony simulations 
+(Section~\ref{sec:simulations}), discuss how the particles of each halo are assigned by the halo 
+finder (Section~\ref{sec:halos}), show the properties of the LMC analogs and the choice of reference 
+frames (Section~\ref{sec:orbits}), and explain the BFE method (Section~\ref{sec:bfe}) and the shape 
+measurement method (Section~\ref{sec:inertia_tensor}).
+
+
+
+\subsection{The Milky Way-est Simulation Suite}\label{sec:sims}
+
+
+\subsubsection{The Simulations}\label{sec:simulations}
+The Milky Way-est (\mwest) Simulation Suite is a set of twenty dark-matter-only zoom-in 
+simulations of Milky Way-like galaxies ($1 \times 10^{12}\, M_\odot < M_{\rm MW} < 1.8 \times 10^{12}\, M_\odot$ 
+and $7 < c_{\rm host} < 16$), constrained to have Milky Way-like accretion histories. This 
+includes a Gaia Sausage-Enceladus analog ($0.67 < z_{\rm disrupt} < 3$ and $M_{\rm sub}/M_{\rm MW} > 0.2$) 
+and an LMC analog ($V_{\rm \max,sub} > 55$ km s$^{-1}$, $z_{\rm infall} < 0.16$, and $30$ kpc $< d_{z=0} < 70$~kpc). 
+Initially part of the \textsc{c125--1024} parent cosmological simulation \citep{Mao2015}, the suite was re-simulated with a 
+particle mass of $m_{\rm part} = 4.0 \times 10^5\, M_\odot$. A full description of the suite can be found 
+in~\cite{buch2024milky}. In Table~\ref{tab:mwest} we summarize the host and merger 
+properties of the \mwest suite. A complete table with all the parameters of the 
+simulation, including LMC and GSE anlalogs properties see Table~2 in~\cite{buch2024milky}.
+
+
+We also include a set of eight halos from the \symphony simulation suite \citep{Nadler_2023}.
+These halo have undergone no major mergers (defined as $M_{\rm sub}/M_{\rm host} > 0.1$) 
+in the past 5 Gyrs. These quiescent halos are presented to provide a baseline against 
+which to compare the results from the \mwest suite. {\color{Coral3} add details in the 
+table about the symphony halos!}
+
+\begin{table}[htp]
+\centering
+
+{\begin{tabular}{lccccr} 
+\hline
+\hline
+
+Halo ID & $\rm{M}_{\rm peak, MW}$ & $\rm{M}_{\rm LMC}/\rm{M}_{\rm MW}$  & $d_{\rm peri}$  & $t_{peri}$ & c/a \\ 
+ & $[\times 1e12$ M$_\odot]$ &  &  [kpc] & [Gyr] &  \\ 
+
+\hline
+Halo 004 &  1.14 & 0.18 & 13.6 & 0.17 & 0.60 \\
+Halo 113 &  1.12 & 0.03 & 44.6 & 0.22  & 0.80 \\
+Halo 169 &  1.62 & 0.29 & 58.1 & -0.36 & 0.92 \\
+Halo 170 \ddag &  1.31 & 0.26 & 8.5  & -0.22 & 0.64 \\
+Halo 222 &  1.15 & 0.28 & 58.5 & 0.63 & 0.84 \\
+Halo 229 \dag &  1.78 & 0.01 & 58.7 & 0.25 & 0.64 \\
+Halo 282 &  1.35 & 0.06 & 27.2 & 0.61 & 0.70\\
+Halo 327 &  1.20 & 0.14 & 42.7 & -0.1 & 0.70 \\
+Halo 349 &  1.44 & 0.22 & 47.8 & -1.32 & 0.64  \\
+Halo 407 &  1.15 & 0.09 & 53.5 & -0.01 & 0.78 \\
+Halo 659 \dag &  1.62 & 0.06 & 36.2 & -0.60 & 0.75 \\
+Halo 666 &  1.58 & 0.46 & 77.4 & -0.04 & 0.58\\
+Halo 719 &  1.35 & 0.38 & 43.8 & 0.09 & 0.76 \\
+Halo 747 &  1.48 & 0.05 & 22.0 & -0.23 & 0.82 \\
+Halo 756 &  1.82 & 0.10 & 66.0 & -0.02 & 0.82\\
+Halo 788 &  1.70 & 0.04 & 33.8 & 0.00 & 0.52 \\
+Halo 975 &  1.17 & 0.29 & 13.2 & -0.09 & 0.69 \\
+Halo 983 &  1.38 & 0.20 & 43.0 & -0.07 &  0.72 \\
+\hline
+\hline
+\end{tabular}}
+\caption{Summary of merger and host properties for \mwest suite. 
+The columns show (1) Halo ID (2) M$_{\rm peak}$ for the Milky Way host (3) merger ratio (4) 
+the pericenter distance (5) the time of the pericentric passage and (6) the axis ratios of the host halo prior 
+the infall of the satellite. The time he pericentric passage are relative to the present-day (0.0 Gyr). 
+Positive values of time indicate the runs that where run into the future to capture the 
+evolution of the LMC analogs. Halos marked with \dag \ had previous pericentric 
+passages at distances greater than 100~kpc. The halo marked with \ddag \
+has to close pericentric passages within 2~Gyrs, we used the first of this
+as the present-day snapshot.}\label{tab:mwest}
+\end{table}
+
+
+\begin{figure*}[h]
+    \includegraphics[width=\textwidth]{Figures/lmc_orbits.pdf}
+    \caption[LMC Orbits and Merger Ratios]{\emph{Left:} Orbit of the LMC analogs for 18 MW-est 
+    halos included in this analysis colored by the merger ratio ($M_{\rm LMC}/M_{\rm MW}$). 
+    For two of the hosts, the LMC is on its second pericentric passage, having had an earlier 
+    pericenter at $r > 100$ kpc in the halo, while for another host, the LMC has not yet reached 
+    pericenter by the final snapshot. We have normalized all the times to the pericenter passage 
+    of the LMC analog. \emph{Middle:} Histogram of merger ratios between $M_{\rm LMC}/M_{\rm MW}$ 
+    for 18 halos in Milky Way-est suite. The merger ratios range from a ratio of 1:60 at the low 
+    end to 1:2 at the high end, with a median ratio of 1:6. \emph{Right:} Distribution of pericentric 
+    distances of the LMC analogs. For comparison, the derived pericentric distance for the LMC is 
+    shown with the blue horizontal line.}\label{fig:lmc_orbits}
+\end{figure*}
+    
+
+
+\subsubsection{Defining the Host DM halo}\label{sec:halos}
+
+
+Particle tracking is done using the \textsc{Symfind} algorithm \citep{mansfield2023symfind}.  
+\textsc{Symfind} keeps track of all the halos that a given particle has ever been contained within 
+while preventing non-physical particle transfers from hosts to their subhalos or transfers caused 
+by many classes of merger tree errors. We use this algorithm to identify all particles that were 
+only ever accreted by the central halo (i.e., ``smoothly'' accreted) as a method for removing the 
+substructure. All subhalos with $M_{\rm sub} > 1.2 \times 10^8\, M_\odot$ (corresponding to 300 particles) 
+are tracked and removed, while matter accreted below this limit is considered to belong to the smoothly 
+accreted halo.
+
+\subsubsection{LMC-analogs orbits and reference frames}\label{sec:orbits}
+
+We analyze the dynamical response of the host halo to the LMC infall starting at a lookback 
+time of 2~Gyrs before the first infall until the present-day where the halocentric frame and LMC 
+position are centered on the position as determined by the \textsc{Rockstar} halo finder. 
+\footnote{In order to get the LMC at the right distance, several of the Milky Way-est hosts were 
+run a little over 1~Gyr past $z=0$. In order to track the halo response as long as possible, 
+we analyze these hosts up until the final simulated snapshot.} 
+
+We use the \textsc{Rockstar} halo finder instead of \textsc{Symfind} to measure 
+LMC positions because \textsc{Symfind} counts all subhalos whose half-mass radii intersect 
+with their hosts' centers as being disrupted or temporarily disrupted. All particle-tracking 
+subhalo finders must use a similar technique to remove merged but still bound subhalos from 
+the catalog \citep{han_2018,diemer_2023}, although \textsc{Symfind}'s method is comparatively 
+aggressive in counting these subhalos as disrupted. \textsc{Symfind}'s criteria leads to some 
+LMC analogs being flagged as temporarily disrupted at pericenter. While this has no impact on 
+particle associations we use to identify the central's smoothly accreted matter, this does 
+suggest that \textsc{Symfind} possibly removes too many high-mass, low-radius halos, as noted 
+by the original authors \citep{mansfield2023symfind}. Although \textsc{Rockstar} has problems 
+with losing track of subhalos at relatively high $m/m_{\rm peak}$ ratios \citep{mansfield2023symfind}, 
+all the LMCs in our sample are still tracked by \textsc{Rockstar} at pericenter, meaning that 
+nothing is lost by using this subhalo finder.
+
+The orbits of the LMC analogs colored by the merger ratios ($M_{\rm LMC}/M_{\rm MW}$) 
+are shown in Figure~\ref{fig:lmc_orbits} (\emph{top}). Here, the time is normalized by $t_{\rm peri}$, 
+where the pericenter is calculated using linear interpolation of the 3D LMC position as a function of 
+the scale factor. $d_{\rm peri}$ is the minimum distance after interpolation (further discussed in 
+Section~\ref{sec:power}), and $t_{\rm peri}$ is the lookback time at the scale at which $d_{\rm peri}$ 
+occurs. Two of the halos (\textsc{Halo 229} and \textsc{Halo 659}) in the Milky Way-est suite have an early pericenter 
+at $z > 0.25$ ($t_{\rm infall} < -3$ Gyrs) and $d > 100$ [kpc]. For these halos, we analyze them at 
+their second pericenter, making them similar to the model presented in~\cite{vasiliev2023dear} of an 
+LMC system on its second pericentric passage. For another halo (\textsc{Halo 788}), the LMC analog has not yet 
+reached first pericenter at the final snapshot, so we set $t_{\rm peri}$ to $z=0$. Lastly, for \textsc{Halo 170}, 
+which has had two close-in pericenters ($d < 100$ kpc) in the last 2~Gyrs, we set $t_{\rm peri}$ to 
+the first pericentric passage. The merger ratios of the LMC systems are shown in 
+Figure~\ref{fig:lmc_orbits} (\emph{bottom}) and range from 1:60 to 1:2 with a median of 1:6. We 
+further summarize the properties of the eighteen halos included in this analysis in Table~\ref{tab:mwest}. 
+For a complete description of the properties of the suite, we refer 
+the reader to~\cite{buch2024milky}.\footnote{At the time of making the analsis of this paper, 
+two halos from~\cite{buch2024milky} (\textsc{Halo 453} and \textsc{Halo 476}) have been removed until particle data integrity issues can be resolved. However, we do not expect 
+including them to significantly alter this analysis.}
+
+Once the orbits of the LMC-analogs are identified, we rotate all the halos so the satellite's orbit lie 
+on the $y-x$ plane as shown in Figure~\ref{fig:bfe-decomposition}. The rotation was done by aligning the 
+angular momentum of the orbit with the $\hat{z}-$axis of the halo. This rotation was kept fixed throughout 
+the evolution of the halo. The reference frame is center at every snapshot in the halo cusp indentified by 
+\textsc{Rockstar}. 
+
+\subsection{A Basis Function Expansion representation of the \mwest Dark Matter Halos}\label{sec:bfe}
+
+In this section we discuss what are BFE and how the BFE are computed from the particle distribution 
+in the simulations. BFE where first introduced to characterize the gravitational field of galaxies 
+in \cite{Clutton-Brock72}. During the subsiquient decades BFE have provided a tool 
+to simulate and understand the dynamics of Galaxies. In particular BFE have been instrumental
+in understanding the dynamics of galactic bars (citations), the satellite-halo interaction (citation),
+and the response of galactic disks to internal and external perturbations (citations).
+BFE have also been applied to cosmological simulations to capture the time-evolving nature
+of the halos potentials. This is particularly useful to reconstruct the orbits of the halo tracers
+\citep{Lowing11, Sanders20} such as stellar streams \citep{Arora24} without the need to re-run a computationaly 
+expensive simulation. Here we make use of BFE to quantify and build intuition of the 
+dynamical state of cosmological halos.  
+
+We make use the publicly available code \expcode and the associated python library 
+\textsc{pyEXP} to compute and analyze the BFE of the \mwest and \symphony simulations.    
+A comprehensive review on the BFE mathemical background was presented in \cite{EXP}, however 
+in this section we briefly summarize the main concepts and equarions that will lay down the 
+langauge used to describe the reponse of the \mwest and \symphony halos. We will work in 
+the spherical coordinate system, wich is the natural system to describe halos. 
+Expansions for disks systems are discussed in Section~2.3 in \cite{EXP}.
+
+A basis function expansion (BFE) is a complete, orthonormal set of basis functions that 
+can uniquely represent any function, given enough terms in the expansion. 
+BFE are suitable to simulate galaxies In this paper wby solving Poisson's equation. For this
+a set of bi-orthonormal functions one describing the density $\rho(\textbf{x})$ and 
+one the potential $\phi(\textbf{x})$ of the galaxy are used. A basis \textit{set}
+is then the sum of $\mu$ functions or \textit{modes}, each of which satisfy
+Poisson's equation $\nabla^{2}\phi_{\mu}(\textbf{x}) = 4\pi G\varrho_{\mu}(\textbf{x})$. 
+
+The contributions from each of the basis to the total density and potential are 
+weighted by amplitude coefficients $a_{\mu}$ such that:
+
+\begin{equation}\label{eq:fields}
+    \begin{split}
+    \rho(\textbf{x}, t) = \sum_{\mu}\,a_{\mu}(t) \rho_{\mu}(\textbf{x}) \\
+    \Phi(\textbf{x}, t) = \sum_{\mu}\,a_{\mu}(t) \phi_{\mu}(\textbf{x}),
+    \end{split}
+\end{equation}
+
+where the coefficients $a_{\mu}$ can be found using the orthonormal properties of $\varrho_{\mu}$ 
+and $\phi_{\mu}$: 
+
+\begin{equation}\label{eq:coefficients}
+    a_{{\mu}} = \dfrac{1}{N} \sum_{i}^{N} \phi_{\mu} (x_{i})  
+\end{equation}
+
+Since Poisson's equation is seperable in any conic coordinate system one
+can solve it in each component. In spherical coordinates, the natural system to describe DM halos, 
+the angular functions components $\theta$ and $\phi$ are represented by the spherical 
+harmonics $Y_{l}^{m}(\theta, \phi)$ that satisfy the orthogonal conditions needed to buid the basis.
+
+\begin{equation}
+    \begin{split}
+    \rho_{\mu}(\textbf{x}) = \rho_{n}(r) Y_{l,m}(\theta, \phi)\\
+    \phi_{\mu}(\textbf{x}) = \phi_{n}(r) Y_{l,m}(\theta, \phi),
+    \end{split}
+\end{equation}
+
+
+\begin{figure*}[h]
+    \centering
+    \includegraphics[width=0.33\textwidth]{Figures/potential_comp.png}
+    \includegraphics[width=0.35\textwidth]{Figures/density_residual_infall.png}
+    \includegraphics[width=0.27\textwidth]{Figures/density_residual.png}
+    \caption[Comparison Between Particle Data and Reconstruction]{\emph{Left:} Percent error 
+    on the gravitational potential reconstructed using the BFE compared to the potential 
+    computed with the tree code method for the raw particle data. The errors across the 
+    $z=0$~kpc slice are within 2.5\%. \emph{Right:} Spherically averaged density residuals 
+    between the NFW basis and the particle data of all the 18 MW-est halos at infall 
+    (\textit{center panel}) and at pericenter (\textit{right panel}).  Beyond 10~kpc, 
+    the residuals are within $\approx 5\%$. In the inner halos, the density computed from 
+    the particles is subject to Poisson noise, leading to larger residuals.}\label{fig:dens_residuals}
+\end{figure*}
+
+For the radial components one need to build a basis that: $i)$ represents the radial structure of DM halos, $ii)$ that is 
+orthogonal and $iii)$ that satisfy Poisson's equation. These three conditions are
+equivalent to solve the Sturm--Liouville (SL) equation, which the Poisson's 
+equation is a special case (see Section 2.2 in~\cite{Weinberg1999}). \expcode solves
+the SL problem numericaly using the density profile specified by the user. The solution 
+to the SL is the \textit{basis} that then is used to compute coefficients using 
+Equation~\ref{eq:coefficients}. 
+
+In order to be able to compare the coefficients across the 18 \mwest halos we need to have a common 
+basis for all the entire sample. We used an NFW profile with scale radius, $r_s$,of $25$ kpc. 
+This scale radius was chosen based on fits to the particle data across the simulation suite and was found to provide a reasonable fit 
+to the structure of the dark matter halo across the previous $\sim 10$~Gyrs. Any deviations from 
+this profile will be corrected by the higher-order radial modes ($1 < n < 10$). The halos are 
+expanded between $r_s/100 < r$ [kpc] $< 6\times r_s$ ($0.25$ kpc $< r < 150$ kpc) using a radial 
+order of $n_{\rm max} = 10$ and five azimuthal basis functions $l_{\rm max} = m_{\rm max} = 5$. 
+In Appendix~\ref{sec:appendix} we discussed in detail the process of chosing a basis and computing
+coefficients with \textsc{pyEXP}. For the purporses of this paper, the order of the expansion 
+provides enough resolution to study the general reponse of the DM halos. This is, 
+we can resconstruct the potential and density fields of the halo 
+using Equations~\ref{eq:fields} within 1\% of that computed with particle data. 
+
+Figure~\ref{fig:dens_residuals} (\emph{left}) shows a comparison of the reconstructed potential 
+from the BFE with the potential computed using the raw particle data from a Barnes-Hut tree 
+code approximation \citep{Grudic2021}. As can be seen, the BFE accurately represents 
+the particle data to the sub-percent level, with the largest errors occurring in regions 
+surrounding subhalos with masses below the limit of the particle tracking algorithm (and 
+therefore assigned to the smoothly accreted halo). We are able to get away with such a 
+relatively low-order expansion due to the efficient substructure removal provided by the 
+\textsc{Symfind} halo finder. In the \emph{center} and \emph{right} panels of 
+Figure~\ref{fig:dens_residuals} we show the ratio between the particle density ($\rho$) and 
+the density from the BFE expansion ($\rho_{\rm EXP}$) for the halo at LMC infall (\emph{center}) 
+and pericenter (\emph{right}). As can be seen, most halos show $0.95 < \rho/\rho_{\rm EXP} < 1.05$ 
+with the error primarily driven by stochasticity in the particle data. 
+
+As shown in Figure~\ref{fig:dens_residuals}, BFE are efficient way to compress the information of the
+density, potential, and acceleration fields. Another advantage of using BFE is to decompose the 
+reponse of the halos in modes. A useful way to represent the contribution of each mode to the total
+reponse of the halo is by computing the \textit{gravitaitonal potential energy} or \textit{power}. 
+The gravitational potential energy ($W$) is the amount of potential energy 
+available to do work in the halo. In the BFE formalism one can show that
+the power in each mode is related to the the volume integral of the density 
+and the potential this is:
+
+\begin{equation}
+    W = \frac{1}{4 \pi G} \int \rho(\bf{x}) \Phi(\bf{x}) d\bf{x}
+\end{equation}
+
+which can be computed directly from the coefficients of the basis 
+making use of its bi-orthonormal properties:
+
+\begin{equation}
+    W = \frac{1}{4 \pi G} \sum_{\mu} \varrho_{mu} \phi_{\mu}  = \frac{1}{4 \pi G} \sum_{\mu} a_{\mu}^2 =  \sum_{\mu} W_{\mu}.
+\end{equation}
+
+As such one can compute the gravitational energy from each mode 
+$\mu$ or a set of modes. It is often convenient to decompose 
+the gravitational power in each $l$ mode, this is:
+
+\begin{equation}
+    W_{l} = \frac{1}{4 \pi G} \sum_{n, m} a^2_{n, m}.
+\end{equation}
+
+To explore the response of the smoothly accreted halo to the infall of the LMC, we mainly focus
+on the gravitational power in the first- and second-order $l$ modes of the BFE. For a
+spherical basis, the various $l$ orders correspond to the spherical harmonics, $l=1$ measures
+the dipole response of the halo, while $l=2$ measures the quadrupole response. As shown 
+in \cite{Petersen_20}, \cite{Garavito_Camargo_2021} and \cite{Lilleengen_23}, we expect 
+these modes to show the largest excitation in response to the LMC infall. Furthermore, we 
+expect the `collective response' discussed in \cite{Garavito_Camargo_2021} to manifest as 
+a strong dipole mode in the plane of the satellite orbit and opposite the position of the LMC. 
+The triaxial shape of the halo should be captured by the axisymmetric $l$ modes. In particular, 
+by the dipole. The dynamical friction wake on the other hand, is expected to show a more complex 
+structure than in idealizedN-body simulations but should be present in the quadrupole and higher order modes 
+ \citep{Garavito_Camargo_2021}. In Section~\ref{sec:wake_density} we expand 
+our analysis to the higher-order modes in order to fully characterize the dynamical friction 
+wake.
+
+\subsubsection{Halos shape measurement}~\label{sec:inertia_tensor}
+
+We characterize the halo shapes in each halos by finding the ellipsoid that best fits 
+the halo density within a shell defined whitin $50-150$~kpc.  
+The ellipsoid is characterized by three \textit{principal axis} (PA)
+($\vec{a}, \vec{b}, \vec{c}$) in 
+the halocentric coordinate frame as defined in Section~\ref{sec:orbits}. 
+We do this at every snapshot of the simulation from redshift from $z=1$ to present-day.
+We find the ellipsoid PA by diagonalizing the moment of inertia tensor
+defined as: 
+
+\begin{equation}\label{eq:I}
+    I_{ij} = \dfrac{1}{M_{shell}} \sum_{i,j}^{3} {m_p x_{i} x_{j}} 
+\end{equation}
+
+Where $i, j$ are the coordinates of the particles of the halo in halocentric coordinates, 
+$m_p$ is the particle mass, and $M_{shell}$ the total mass inside $50-150$~kpc.
+The eigenvectors and the sqaure root of the eigenvalues of the inertia tensor correspond 
+the directions and magnitudes of the PA. In our notation the PA always satisfy 
+that $a \geq b \geq c$. As such, for a spherical halo $a = b = c$, for a
+prolate halo $a \geq b = c$, and for an oblate halo $a = b \geq c$. The orientation 
+of the axis is quantified by the angle $\theta$ between the larger PA $a$ and the $\hat{x}$
+axis of the halo. 
+
+In the analysis presented in Section~\ref{sec:results}, we report results in terms of 
+the axis ratios $c/a$, $b/a$, $\theta$ and the triaxiality parameter ($T$) which is commonly used 
+in the literature to summarize the halo shape. $T$ is defined as:  
+
+\begin{equation}
+    T = \frac{a^2 - b^2}{a^2 - c^2},
+\end{equation}
+
+Where $T$ is zero for a perfect oblate halo, and $T$ is unity for a perfect prolate halo 
+\citep{Warren1992}. The transition from oblate to prolate 
+takes place around $1/3 \leq T \geq 0.5$ where halos are \textit{triaxial} \citep{Warren1992}. 
+
+In this work we are mainly interested in global measurements of the halo shape 
+to quantify how triaxial, oblate, or prolate the halos are. {\color{Coral3} For this reason we use the simple
+defintion of the inertia tensor of Equation~\ref{eq:I} evnthough more sophisticated methods to find halo 
+shapes have been discussed in the literature (CITATIONS, ask Phill).}
+
+We compcute the halo shape with the \texttt{halo\_shape} 
+function in \texttt{pynbody} using a single homeoidal shell between $50<r$ [kpc] $< 150$ 
+as a proxy for the entire halo  shape in the radial range of interest 
+(roughly the radial range where previous simulations and observations predict a 
+strong halo response to the infalling LMC). 
+
+\section{Results}~\label{sec:results}
+
+\begin{figure*}
+    \includegraphics[width=\textwidth]{Figures/pericenter_Halo407_density_projected_old.png}
+    \caption{Example density field computation using the BFE and decomposition for Halo407 from 
+    the Milky Way-est simulation suite showing from left to right (1) projected density of 
+    smoothly accreted host particles, (2) full BFE with $l=5$ and $n=10$, (3) density of $l=1$ 
+    mode relative to $l=0$, (4) density of $l=2$ mode relative to $l=0$, 
+    and (5) density of $l>1$ mode relative to $l=0$. For the leftmost plot, the particle density 
+    is projected in the X-Y plane (X-Z), while for the other plots, the plot 
+    shows a cross-sectional slice at $z=0$ ($y=0$). The colorbars for panels (1) and (2) are 
+    scaled arbitrarily, while plots (3-5) show the density contrast scaled between -1 and 1. 
+    The dashed line shows the orbit of the LMC analog and the black dot shows the current position 
+    (chosen to be roughly at the pericentric passage). Also shown in 
+    panels (3) and (4) is an arrow indicating the direction of of the $l=1$ mode (3) and the 
+    principal axis of the halo (4) (see discussion in Section~\ref{sec:orientation} for more details).} 
+    \label{fig:bfe-decomposition}
+    \end{figure*}
+    
+As discussed in Section~\ref{sec:bfe}, the halo response is fully described by the linear 
+combination of its modes. While we expect individual modes to correspond to different 
+physical mechanisms of the halo response, some processes are described by the linear 
+combination of multiple modes. This is illustrated in Figure~\ref{fig:bfe-decomposition}, 
+where the density field of \textsc{Halo 407} at the time of the satellite's pericentric 
+passage is decomposed into its modes. In the first and second columns, we show the full 
+density computed with the particle data and the full expansion. The subsequent columns 
+show the contributions to the density fields from the $l=1$ mode (\emph{3rd column}), 
+the quadrupole ($l=2$) mode (\emph{4th column}), and all higher-order ($l>2$) modes 
+(\emph{5th column}). The figures show how the density field of the $l=1$ mode largely 
+exhibits overdensities in one hemisphere of the halo ($z > 0$ and $y > 0$), possibly 
+due to the center-of-mass (COM) motion induced by the satellite. In contrast, 
+the $l=2$ mode represents the elongated shape of the halo, mainly along the $z$-axis. 
+Yet, it all the modes contribute to the overdensity of the dynamical 
+friction wake trailing the satellite.
+
+In Figure~\ref{fig:all-modes} we show the amplitude of the gravitational energy 
+in each mode averaged throughout the evolution of each halo in the \mwest suite. For all the halos 
+most of the gravitational energy is in the monopole and in the quadruple followed 
+by the dipole. Higher order modes such as the $l=5$ does not seem to have much 
+information. Yet, as shown in the left panel of Figure~\ref{fig:dens_residuals} 
+we can see an $l=5$ pattern in the residuals, as such if one is interested in 
+achiving a higher precission in the density, potential, or acceleration fields 
+one could increase the order of the expansion. 
+
+The mean gravitaitonal energy across all halos is plotted in Figure~\ref{fig:all-mean-modes}.
+The error bars represent the standard deviation across all 18 halos in the \mwest halos.
+On evrage the monpole ($l=0$) is at least two orders of magnitudes larger than the 
+quadupole ($l=2$) and three times than the dipole ($l=1$). Since the monpole was chosen to 
+be the NFW halo (see Section~\ref{sec:bfe})that best fitted all the halos it is expected that it has the larger 
+amplitude. Each of these modes are correlated with a physical quantity of the halo, 
+this will be discussed in the next subsections. {\color{Coral3} Add lines for \symphony
+and the time of peri}. 
+
+In the following subsections, we quantify the evolution of the halo response to the infall 
+of LMC-like satellites in terms of the amplitudes of the modal response characterized by the 
+coefficients of the BFE. We outline our results as follows: In Section~\ref{sec:halo_response}, 
+we focus on the temporal evolution of the gravitational energy $W$ of the low-order modes 
+$l = 0, 1, 2$. In Section~\ref{sec:orientation}, we examine changes in the orientation of 
+the $l = 1$ mode and the principal axis of the halo to characterize the spatial location 
+of the halo response and its relationship with the orbit of the satellite. In 
+Sections~\ref{sec:classical_wake} we analyze high-order modes 
+to identify the structure of the dynamical friction wakes in all the halos.
+
+\begin{figure*}[h]
+    \centering
+    \includegraphics[width=1.8\columnwidth]{Figures/power_in_coefficients.pdf}
+    \caption{\textit{Left:} Mean gravitational power through the evolution of each
+     halo for the $l=0-5$ modes. The monopole ($l=0$) mode
+     is the largerst in evevery halo and at every time during the evolution of the halo.
+     On average, the quadrupole ($l=2$) and dipole ($l=2$) modes are the second and third
+     most dominant modes.}
+    \label{fig:all-modes}
+\end{figure*}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{Figures/mean_power_across_halos.pdf}
+    \caption{Mean gravitational power for every mode 
+     across halos and time.}
+    \label{fig:all-mean-modes}
+\end{figure}
+
+%\begin{figure}
+%    \centering
+%    \includegraphics[width=1.0\linewidth]{Figures/Monopole_power_vs_enclosed_mass.pdf}
+%    \caption{Gravitational power in the monopole ($l=0$) at every time-step and for every halo
+%    of the MW-est suite as a function of the enclosed mass of the halo. The enclosed
+%    mass is within the same radius (150~kpc) used to compute the basis of the halo. The one
+%    to one relationship demonstrates that the monopole term always corresponds to the
+%    enclosed mass of the halo. A mathematical demonstraion is presented in the main text.}
+%    \label{fig:monopole}
+%\end{figure}
+
+\begin{figure*}[h]
+    \includegraphics[width=0.99\textwidth]{Figures/halos_dipoles_quadrupoles.pdf}
+    \caption[Power in Halo Response]{\emph{Top:} Power in $\frac{l=1}{l=0}$ (\emph{left}) and $\frac{l=2}{l=0}$ (\emph{right}) 
+    modes as a function of time for the 18 MW-est hosts. The lines are colored by the median axis ratio averaged over roughly 
+    two Gyrs prior to infall ($-3$ Gyr $< t-t_{\rm peri} < -1$ Gyr) to show the correlation with $l=2$ power. The x-axis 
+    is shifted such that $t-t_{\rm peri} = 0$ is the time of the LMC's first pericenter. For the host where the LMC has not yet 
+    its first pericenter $t-t_{\rm peri} = 0$ is assumed to correspond to the final snapshot. The dashed line marks 
+    $t-t_{\rm peri} = 0$, while the shaded regions represent the approximate duration of the dipole (quadrupole) response. 
+    Also shown for comparison is the power in $\frac{l=1}{l=0}$ and $\frac{l=2}{l=0}$ for  8 hosts from the \textsc{SymphonyMilkyWay} 
+    suite that have undergone no major mergers in the past 5 Gyrs (\emph{dashed black}) and from the idealized MW--LMC merger 
+    presented in \cite{garavito_19} (\emph{red}). \emph{Bottom:} Same as top except the lines are normalized by subtracting 
+    off the power at $t-t_{\rm peri} = -0.5$. The lines are colored by the merger ratio $M_{\rm LMC}/M_{\rm MW}$ to highlight 
+    the correlation with $l=1$ power. We remove two halos for this analysis: Halo788 which has not yet reached pericenter 
+    and \textsc{Halo983} which has another massive merger immediately prior to the LMC infall.} 
+    \label{fig:power}
+\end{figure*}
+
+\subsection{Halo response to LMC-analogs}\label{sec:halo_response} 
+
+\begin{figure*}[h]
+    \includegraphics[width=\textwidth]{Figures/power_l_2.pdf}
+    \caption[Correlation Between Power and Merger Ratio]{Correlation between maximum power 
+    and merger ratio for $l=1$ (\emph{top}) and $l=2$ (\emph{bottom}). The power in the $l=1$ 
+    mode is calculated as the maximum between $0$ Gyrs $< t-t_{\rm peri} < 1$ Gyr, while the power 
+    in the $l=2$ mode is calculated as the maximum between $|t-t_{\rm peri}| < 0.5$ Gyrs. For both 
+    $l=1$ and $l=2$ the power is normalized by subtracting off the power at $t-t_{\rm peri} = -0.5$ 
+    Gyrs. Also included is the power in $l=1$ and $l=2$ from the idealized simulations 
+    \citep{Garavito_Camargo_2021}. All points are colored by the $c/a$ axis ratio, which shows a 
+    secondary correlation with the $l=2$ power (\emph{bottom}).}\label{fig:strength}
+\end{figure*}
+    
+
+In this section we show how the high-order modes are corrected with physical 
+quantities and dynamical processes that take place in the halo. In Figure~\ref{fig:monopole}
+we show the sqaure root of the amplitude of the gravitaitonal enery in the 
+monpole as a function of the enclosed mass within 150~kpc of the halo. 
+Each dot in the figure corresponds to every halo of the \mwest suite at every 
+snapshot within the window of $z=1-0$. {\color{Coral3} The linear correlation is 
+expected as only the monopole contributes to the mass of the halo}. 
+
+Figure~\ref{fig:power} (\emph{top}) shows the temporal evolution of the gravitational
+energy in the dipole ($l=1$) and quadrupole ($l=2$) modes for the 18 halos in the 
+\mwest (left panels) and \symphony (right panels) suites. The amplitude of the $l=1$ 
+and $l=2$ modes is normalized by the amplitude in the monopole ($l=0$) and centered 
+on the time of the first pericenter of the LMC ($t-t_{\rm peri} = 0$). We color of 
+the lines correponds to the mass ratio of the satellite and host in the dipoles panels 
+(top) and the axis-ratios of the halos.   
+
+For comparison, we also show the relative amplitude of gravitaitonal energy 
+of the $l=1$ and $l=2$ of the \cite{Garavito21} halos.  
+
+As can be seen, the SymphonyMilkyWay halos show a similar range of
+power in $l=2$ to the Milky Way-est halos, but lower power in $l=1$, consistent 
+with the picture that quadrupole power is set early in the halos' assembly history
+and persists over long time scales (Arora et al., in prep), while the power in 
+the dipole is induced by perturbations in the halo such as mergers and predicted 
+to last for a number of dynamical times \citep{Weinberg_23}. 
+
+
+
+The LMC infall induces a strong dipole and weaker 
+quadrupole response in the majority of halos in the simulation suite, confirming the results found in idealized N-body simulations \citep[e.g,][]{Petersen_20, Garavito_Camargo_2021, Lilleengen_23}.
+For a number of the halos, a strong $l=2$ mode is already present prior to the first pericentric passage of the LMC (Figure \ref{fig:power}, \emph{top left}), which correlates strongly with the axis ratio of the halo (illustrated by the color bar and computed as the median axis ratio between $-3$ Gyr $< t-t_{\rm peri} < -1$ Gyr). 
+In these halos, the LMC response manifests as a small perturbation on top of the pre-existing quadrupole. Meanwhile, the dipole power tends to be negligible prior to the first 
+pericentric passage and displays a strong peak after the pericentric passage (the one halo that peaks prior to LMC pericenter has another major merger which reaches pericenter 
+at approximately $t-t_{\rm peri} = -1$). The dipole response peaks between 0.5 -- 1 Gyrs after the first LMC pericenter, while the quadrupole response peaks at or very near 
+pericenter (around when we expect a peak in the dynamical friction wake, indicating a correlation between the quadrupole and the wake). The length of the response is on the order of 1 -- 2 Gyrs for the dipole and 0.5 -- 1 Gyrs for the quadruple.
+
+
+We also show the relative power in the $l=1$ and $l=2$ modes induced in the tailored Milky Way--LMC simulation from \cite{garavito_19} \citep{Garavito_Camargo_2021}. The host 
+halo in this simulation was initialized as an idealized Hernquist profile and the mass ratio of the MW and LMC is $\approx 0.12$. We see that, on average, the tailored simulation 
+shows lower power in both the $l=1$ and $l=2$ modes relative to the monopole.\footnote{The idealized simulations do show an enhancement in $l=2$ at pericenter, however, the power is so low that it cannot be seen due to the scale in Figure \ref{fig:power}, \emph{right}.} However, when accounting for trends with the MW--LMC merger ratio these results are consistent with the results from the MW-est suite (see Section \ref{sec:power}).
+%similar to the results found in \cite{Lilleengen_23} using NFW profiles. These results indicate
+%that the pre-existing non-spherical halo shape can amplify the halo response to the LMC. 
+
+
+
+\subsection{Correlations between the halo structure and the halo shape} \label{sec:correlations}
+
+\begin{figure}[h]
+    \includegraphics[width=\columnwidth]{Figures/Monopole_power_vs_enclosed_mass.pdf}
+    \includegraphics[width=\columnwidth]{Figures/dipole_com_correlation.pdf}
+    \includegraphics[width=\columnwidth]{Figures/quadrupole_shape_correlation.pdf}
+\caption{Gravitational power in the monopole ($l=0$) at every time-step and for every halo
+    of the MW-est suite as a function of the enclosed mass of the halo. The enclosed
+    mass is within the same radius (150~kpc) used to compute the basis of the halo. The one
+    to one relationship demonstrates that the monopole term always corresponds to the
+    enclosed mass of the halo. A mathematical demonstraion is presented in the main text.}
+\end{figure}
+
+
+
+
+\subsection{Halo response orientation} \label{sec:orientation}
+
+
+
+\begin{figure*}[h]
+    \includegraphics[width=1.0\textwidth]{Figures/angle_orientations.pdf}
+    \caption[Orientation of Halo Response]{Separation angle between the dipole and the pericenter position of the 
+    LMC (\emph{left}) and angular moment of the satellite (\emph{center}) for all 18 halos as a function of 
+    $t-t_{\rm peri}$.  We see that the dipole response is anti-aligned with the pericenter position of the halo 
+    and in the plane of the satellite (90 degrees w.r.t the angular momentum). This alignment lasts about as long 
+    as the peak in the $l=1$ power (\emph{black shaded region}, same as shown in Figure~\ref{fig:power}). \emph{right:} 
+    Separation angle between the principal axis of the host (proxy for the quadrupole) and the angular momentum of the 
+    LMC for all 18 halos as a function of $t-t_{\rm peri}$. Following pericenter, the quadrupole response becomes 
+    more aligned with the orbital plane (90 degrees w.r.t the angular momentum).} 
+    \label{fig:orientation}
+    \end{figure*}
+    
+ 
+As illustrated in Figure~\ref{fig:power}, the amplitude of the modal response of the halo changes in time. Similarly, the direction (phase) of the modes also changes in time as the satellite orbits around the host. The phase of the modes can be characterized at each time step by taking the ratios between the $m$ modes for every $l$-mode.  In our reference frame, the $m=0$ coefficient corresponds to the power in the $z$ direction, while the $m = \pm 1$ corresponds to the power in the $x$ and $y$ directions. This is
+\begin{equation}
+\begin{split}
+    \theta_{l} =  \sum_n \mathrm{arccos}(A_{n, l=1, m=0} / A_{n, l})  \\ 
+    \phi_{l} = \sum_n \mathrm{arctan2}(A_{n, l=1, m=1}/A_{n, l=1, m=-1}),
+\end{split}
+\end{equation}
+where $ A_{n,l=1} = \sqrt{A_{n, l, m=0}^2 + A_{n, l, m=1}^2 + A_{n, l, m=-1}^2}$ . Here we focus on the $n=0$ modes since these modes have most of the power.  
+
+To understand the evolution of the orientation of the halo response, we measure the angles between the dipole ($l=1$) mode and the pericenter position of the LMC and the LMC's angular momentum vector. We also explore the correlations between the principal axis of the halo and the angular momentum of the LMC. 
+
+
+
+%The orientation of the quadrupole and dipole response and the orbital path of the LMC. 
+
+If the dipole ($l=1$) is being induced by the COM displacement and hence by the mode that contributes the most to the collective response, we expect it to be in the plane of the LMC's orbit (perpendicular to the angular momentum of the satellite), but on the opposite side of the halo from the satellite ($\approx 180^{\circ}$).
+
+Since the quadrupole seems to be correlated with the principal axis of the halo (see 
+Figure~\ref{fig:example}, fourth panel) we  compute the angle between the principal
+axis and the angular momentum of the satellite to characterize the change in the 
+orientation of the principal axis of the halo  (within $50$ kpc $< r < 150$ kpc). Visual 
+inspection of the direction of the principal axis compared to the density of the quadrupole response shows good agreement between the two. 
+
+Figure \ref{fig:orientation} shows the angle between the $n=0$ dipole mode and 
+the pericentric position at the LMC (\emph{left}) as well as the angular momentum of the 
+satellite (\emph{center}). As expected, following pericenter, the dipole appears anti-aligned 
+with the pericentric position and aligned with the plane of the orbit (at $90^o$ to the 
+angular momentum). This (anti-)alignment lasts for $\sim 1-2$ Gyrs, 
+in line with the length of the dipole response measured from the power (Figure \ref{fig:power}). 
+It also corresponds with our expectation that the dipole largely represents the 
+barycenter shift of the host halo during the LMC's orbital passage (i.e. the collective response as discussed in \citealt{Weinberg98, Gomez16, Garavito_Camargo_2021}). 
+
+In Figure \ref{fig:orientation} (\emph{right}) we plot the angle between the orbital angular momentum of the LMC and the 
+principal axis of the halo. Following the pericentric passage of the LMC the principal axis of the halo tends to shift to be 
+aligned $\sim 90^o$ with respect to the orbital angular momentum. This suggests that the LMC infall torques the pre-existing quadrupole aligning it more closely with the plane of the satellite orbit. We do not see a correlation between the principal axis and the position of the LMC at pericenter. For a longer discussion of the mechanisms that set the underlying orientation of $l=2$ modes in cosmological halos as well as their response to LMC-like mergers see Arora et al., in prep. 
+
+
+
+
+\subsection{The Classical Dynamical Friction Wake}~\label{sec:classical_wake}
+
+\begin{figure*}[h]
+    \includegraphics[width=\textwidth]{Figures/halo_wakes_all_averaged.png}
+    \caption[Dynamical Friction Wake]{Dynamical friction wakes for all 18 halos in the MW-est suite.
+     The axes are rotated to show the plane of the LMC orbit, and the density is averaged over 
+     $-25$~kpc $< z < 25$~kpc relative to the $l=0$ mode. The panels are sorted by decreasing merger 
+     ratio (top--bottom and right--left). The black line indicates that orbit of the LMC 
+     (dashed \emph{before} pericenter and dotted \emph{after} pericenter), and the black dot 
+     shows the current position of the LMC (\emph{at} pericenter).} 
+    \label{fig:classical_wakes}
+\end{figure*}
+     
+    
+
+As first shown by Chandrasekhar, an infalling satellite produces an overdensity that trails 
+its orbit. This overdensity or dynamical friction wake can be seen in the panels of 
+Figure~\ref{fig:classical_wakes}, where most of the halos show a density enhancement trailing 
+the orbit of the satellite.  Similar to Figure~\ref{fig:example},  the density projections are 
+rotated to match the orbital plane of the satellite. The top left panel corresponds to the larger 
+merger ratios, while the bottom right panel represents the lower mass merger ratios. The strength 
+of this dynamical friction wake relative to the $l=1$ or the collective response is discussed in the 
+following section.
+
+In addition to the dynamical friction wake, several overdensities and underdensities 
+are also seen in the halo. For example, Halo719, 975, 170, 349, 004, 327, 756, 282, 788, 113, and 229 
+show strong quadrupoles that include a large overdensity opposite to the satellite's location 
+which could be representing the triaxiality of the halo or/and the nascent collective response. 
+
+
+As further discussed in Section~\ref{sec:power}, there are a number factors such as merger 
+ratio, halo shape, eccentricity, and pericentric distance that can modulate the amplitude 
+of the halo response. In particular, the density in the dynamical friction wake increases 
+with the mass of the satellite,  while the collective response depends on the amount of 
+displacement induced in the host halo.  Here, we compare both the amplitude in the dynamical 
+friction wake and in the collective response in all the halos. 
+ 
+In order to compare the relative overdensity caused by the dynamical friction wake and the 
+collective response, we compare the density contrast (relative to the $l=0$ density) between 
+the halo in the direction of the $l=1$ mode (collective response) and along the orbit of the 
+satellite (dynamical friction wake). To match the observed data, we average the density contrast 
+(density relative to the monopole) from $60$ kpc $< d < 100$ kpc. We measure the density contrast 
+of the wake as the maximum along the orbital path of the LMC and the density contrast of the 
+collective response as the maximum value in the direction of the $l=1$ mode using a mollweide 
+projection with $N_{\rm side} = 24$ and $1^\circ$ Gaussian smoothing. An example can be seen in 
+Figure~\ref{fig:mollweide}, where we have rotated the axis to match the present-day position of the 
+LMC in the MW. We measure the collective response at the location of the green X, while the wake is 
+measured as the maximum contrast along the path of the black dots.  
+
+In Figure~\ref{fig:density_contrast}, we compare the density contrast of the dynamical friction wake
+vs. the collective response in our simulations to measurements from the Milky Way \citep{Conroy_2021} 
+and idealized simulations \citep{garavito_19}.  We show both the values measured at pericenter 
+($\sim$ the present-day location of the LMC) and the value at $t - t_{\rm peri} = 0.5$ Gyrs 
+(roughly the position where we expect the collective response to reach its maximum value; 
+see Figure~\ref{fig:power}). Our simulations show a wide range of scatter, spanning the values 
+measured from both the observed data and the previous simulations. Coloring by merger ratio, we 
+see a positive correlation between the strength of the density contrast in both the dynamical 
+friction wake and the collective response. As expected, the density contrast for the collective 
+response is higher, on average, for the snapshots at $t - t_{\rm peri} = 0.5$ Gyrs and shows a 
+stronger correlation with the merger ratio. This is in line with recent measurements of a 
+present-day density contrast consistent with zero for the collective response \citep{Amarante_24} 
+and indicates that the density contrast in the Milky Way caused by the collective response will 
+likely grow over the next $\sim 500$ Myrs, assuming that the present-day LMC is at or near first 
+pericenter.  
+
+The wide range of densities contrast measured both in the wake and in the collective response 
+highlights the non-linear response of the density field of the halo. Hence, constraining the mass 
+and orbit of the LMC from the density contrast is not straightforward and is even more complicated 
+in the presence of substructure. 
+
+%\begin{figure*}
+%\includegraphics[width=\textwidth]{Figures/grid_changeHalo407_PERI.png}
+%\caption[Comparison with Pre-Infall Halo]{Fractional change in density (\emph{left}), potential
+%(\emph{center}), and acceleration (\emph{right}) for Halo407 at pericenter relative to 1 Gyr prior 
+%to pericenter. Each field is divided by the monopole to remove the contribution from the
+%growth of the halo mass. The axis is rotated into the plane of the orbit, and the fields are 
+%averaged between $-25$ kpc $< z  < 25$ kpc. The black dashed line shows the orbit of the LMC analog,
+%while the black dot shows the position (at pericenter).}\label{fig:field_change}
+%\end{figure*}
+
+%\begin{figure*}
+%\includegraphics[width=\textwidth]{Figures/field_maximum_contrast2.png}
+%\caption[Change in Halo Fields]{Maximum fractional change in density (\emph{left}), potential 
+%(\emph{center}), and acceleration (\emph{right}) as a function of the merger ratio, shown at 
+%pericenter (\emph{black circle}) and 0.5 Gyrs after pericenter (\emph{red X}) relative to 
+%1 Gyr prior to pericenter. Each field is normalized as described in Figure~\ref{fig:field_change} 
+%and averaged between $-25$ kpc $< z < 25$ kpc.}\label{fig:field_max_change}
+%\end{figure*}
+
+
+
+%\subsection{The impact of the LMC infall on the shape of the dark matter halo}\label{sec:wake_other_fields}
+
+
+\section{Discussion}
+
+\subsection{What sets the power of the response?} \label{sec:power}
+
+
+To first order, we expect the power of the response to scale with the tidal force exerted by 
+the LMC. A proxy for the tidal force is the scaled tidal index ($\Gamma$) which is calculated as:
+
+\begin{equation}
+    \Gamma = \log_{10} \frac{M_{\rm LMC}/d^3}{V_{\rm c,max}^2/GR_{\rm max}^2},
+\end{equation}
+where $M_{\rm LMC}$ is the mass of the LMC, $d$ is its distance, $V_{\rm c,max}$ is the maximum 
+circular velocity of the host, and $R_{\rm max}$ is the corresponding radius. This gives the ratio 
+of the tidal forces between the MW and LMC and is maximized at pericenter. However, this value 
+neither accounts for the length of the interaction, which depends on the satellite velocity, 
+nor does it capture the complicated dynamical interaction between the two extended bodies. 
+
+We calculate the tidal index as the maximum value using the orbital path of the LMC and the 
+instantaneous mass. However, due to difficulties in assigning a bound mass at pericenter, 
+this parameter is relatively noisy. These difficulties arise because subhalos received a strong 
+impulsive shock at pericenter \citep{gnedin_1999}, with a median subhalo having nearly twice its 
+binding energy rapidly injected into it \citep{vdb_ogiya_2018}. The subhalo remains intact 
+because the energy is not evenly distributed across its particles \citep{vdb_ogiya_2018}, 
+but these shocks can lead to complex temporary configurations of the subhalo's particles which 
+can cause some subhalo finders to mis-measure the bound mass. Thus, we also examine the correlation 
+between the power and the pericenter distance ($d_{\rm peri}$) and the infall merger ratio 
+($M_{\rm LMC}/M_{\rm MW}$) as well. 
+
+To compute the maximum power in the $l=1$ and $l=2$ modes we first subtract off the background 
+power at $t-t_{\rm peri}=-0.5$ Gyrs. The power in the $l=1$ and $l=2$ modes after this subtraction 
+can be seen in Figure~\ref{fig:power} (\emph{bottom}) where the lines are colored by the LMC merger 
+ratio. We compute the maximum power as the maximum offset subtracted power between 
+$0 < t-t_{\rm peri} < 1.5$ Gyrs for the $l=1$ mode and between $-0.5 < t-t_{\rm peri} < 0.5$ Gyrs 
+for the $l=2$ mode. For this analysis we remove two halos: Halo788 where the LMC has not yet 
+reached pericenter and Halo983 that has a massive merger that reaches pericenter $\sim 1$ Gyr 
+before the LMC. 
+
+Spearman's correlation coefficient between each of these properties and the maximum power of the 
+$l=1$ and $l=2$ modes can be seen in Table \ref{tab:spearman}. We see the strongest correlation 
+between the power and the merger ratio, followed by the tidal index. We plot the correlation with 
+the merger ratio in Figure \ref{fig:strength}. As can be seen, the power in the $l=2$ mode appears 
+to be moderately correlated with the merger ratio, while the power in the $l=1$ mode shows a 
+strong correlation. We also plot the normalized power in both the $l=1$ and $l=2$ modes from the 
+idealized simulations. The maximum power is in agreement with that of the cosmological simulations 
+given the merger ratio of the LMC remnant \citep[$M_{\rm LMC}/M_{\rm MW} = 0.12$;][]{garavito_19}
+
+The pericenter shows no correlation with the power in either $l=1$ or $l=2$. However, this may be 
+attributable to MW-est LMC analogs being constrained to have their pericenters at or around 50~kpc, 
+meaning that the suite probes a small range of pericentric distances.
+
+We also examine the correlation between the power in the $l=1$ and $l=2$ and the shape of the 
+halo ($b/a$, $c/a$, and the triaxiality (T) as described in Section~\ref{sec:methods}), all 
+calculated as the median between $-3\,$ Gyr $< t-t_{\rm peri} < -1\,$ Gyr. We average over this 
+timescale to get a proxy for the halo shape prior to the timescales where we expect additional 
+deformation induced by the LMC (see Figure \ref{fig:power}). %modes and the tidal index ($\Gamma$), halo axis ratios (averaged over $-3 \rm Gyr < t-t_{\rm peri} < -1 \rm Gyr$ prior to infall), triaxiality (T), and pericenter distance. 
+Both $b/a$ and $c/a$ are anti-correlated with the strength of the power in the $l=2$ mode 
+(Table~\ref{tab:spearman}). This can also be seen in Figure \ref{fig:strength}, where we color the 
+points by $c/a$. At fixed $M_{\rm LMC}/M_{\rm MW}$, halos with smaller axis ratios show higher 
+maximum power in $l=2$. These results further indicate that pre-existing triaxiality may help to 
+amplify the $l=2$ response. 
+
+\begin{table*}
+\centering
+\caption{Spearman correlation between normalized power (Figure \ref{fig:power}, 
+\emph{bottom}) in $l=1$ and $l=2$ modes and the mass ratio of the LMC ($M_{\rm LMC}/M_{\rm MW}$), 
+the halo axis ratios ($b/a$ and $c/a$), the triaxiality ($T$), the scaled tidal index ($\Gamma$), 
+and the pericenter distance ($d_{\rm peri}$). The errors are calculated using jackknife 
+resampling.}\label{tab:spearman}
+{\begin{tabular}{lcccccr} 
+\hline
+Mode & $M_{\rm LMC}/M_{\rm MW}$  & $b/a$ & $c/a$ & $T$ & $\Gamma$ & $d_{\rm peri}$ \\ 
+\hline
+l=1 & $0.92 \pm 0.05$ & $-0.34 \pm 0.24$ & $-0.23 \pm 0.26$ & $0.18 \pm 0.27$ & $0.78 \pm 0.11$ & $0.08 \pm 0.28$  \\
+l=2 & $0.71 \pm 0.10 $ & $-0.66 \pm 0.19$ & $-0.62 \pm 0.19$ & $0.36 \pm 0.26$ &  $0.62 \pm 0.13$ & $-0.02 \pm 0.31$  \\
+\hline
+\end{tabular}}
+\end{table*}
+
+
+\subsection{Wake density constast}
+
+
+\begin{figure}[h]
+    \includegraphics[width=\columnwidth]{Figures/Halo407_density_projected_mollweide_pericenter000.png}
+    
+    \caption[All-Sky Response]{Mollweide plot of density contrast at pericenter for Halo407 in the MW-est suite, rotated to show the LMC at approximately the present-day position of the LMC. The \emph{red X} marks the position of the LMC, while the \emph{green X} marks the direction of the $l=1$ mode. The black dots show the orbital path of the LMC between infall and pericenter.} 
+    \label{fig:mollweide}
+\end{figure}
+    
+    
+    
+\begin{figure*}[h]
+    \includegraphics[width=\textwidth]{Figures/density_contrast_averaged_after_pericenter.png}
+    
+    \caption[Density Contrast Comparison with Observations]{Density contrast in the dynamical friction wake vs. the collective response measured at pericenter (\emph{left}) and at 0.5 Gyrs after 
+    pericenter (\emph{right}). For both plots, the density contrast is averaged between $60$ kpc $< d < 100$ kpc and measured along 
+    the LMC orbital path for the wake and in the direction of the $l=1$ mode for the collective response (see Figure \ref{fig:mollweide}). The points are colored
+    by $M_{\rm LMC}/M_{\rm MW}$. Also shown is the density contrast at pericenter (\emph{left} and \emph{right} panels) from both the idealized simulations \citep{garavito_19} (colored by the 
+    merger ratio) and the observed data \citep{Conroy_2021} fixed to the present-day value in both panels ($\sim t-t_{\rm peri} = 0$). } 
+    
+    \label{fig:density_contrast}
+\end{figure*}
+    
+
+
+\subsection{Future work: BFE as a framwork to chracterize and decompose the dynamics of DM halos 
+in cosmological simualtions}
+
+We have presented a framework based on BFE to characterize the dynamical response of DM halos 
+to the passage of satellites. In this framwork instead of analyzing phase-space information
+one analyze the dynamics of the halo with the terms of the BFE. This is a more natural space to represent
+the dynamics of halos beacause the direct connection between BFE and perturbations theory (citations).
+Each term in the BFE is a time-series that represents fully or partially a dynamical process that 
+take place in the halo. For example, in~\ref{sec:bfe_terms} we show that the amplitude of the 
+monopole $l=0$ represents the enclosed mass of the halo. BFE therefore offer a powerful framework 
+to susinctly characterize and compare the dynamics of halos across simulations. 
+
+In cosmological simulations, unlike idealized N-body simulations, many processes take place at the same
+time during the evolition of a galaxy. This complicates efforts to decompose the response of a halo
+to a particular physical mechanism. For example, we showed that the amplitude quadruple modes ($l=2$) 
+are correlated with the shape of the halo, but we also show that satellite galaxies also 
+excite an $l=2$ mode. In this example, it is not clear how to disentagle the halo response of these 
+two processes. 
+
+In a series of upcomming papers we will show how one can analyze BFE with time-series data analysis methods
+to decompose the halo response. In Arora et., al. in preparation we decompose the halo response to 
+filamentary accretion and  to the accretion of a massive satellite using multichannel singular spectral analysis
+on the time-series of the $l=2$ modes. In Varela et., al. in prep, we will decompose the torques experienced
+by a galactic disk to the passage of a satellite and to the DM halo response. These papers
+will also be acompanied by code and tutorials to illustrate the use of BFE in cosmological simulations.  
+
+\section{Conclusions}\label{sec:conclusions}
+
+We investigated the impact of LMC-analog satellite galaxies on the host DM halos 
+using 18 cosmological simulations from the MWest suite~\cite{buch2024milky}. These simulations
+are ideal to study the MW-LMC system in a cosmological context as they 
+braodly resemble the orbital properties and masses of the LMC. We made use of Basis 
+Function Expansions (BFE) to characterize the hosts halos response as a function of time, 
+starting $\approx$2 Gyrs before the satellite's pericentric passages and to 2 Gyrs after pericenter. 
+We removed all the subhalos with mass larger than $M_{\rm sub} \sim 10^8\, M_\odot$ 
+that were identified with the \textsc{Symfind} halo finder. We identified and characterize 
+the evolution of dynamical friction wakes and dipoles accros all DM halos. Our main finding are summarize here:  
+
+\begin{enumerate} 
+    \item \textbf{The halo response across 18 halos was characterized by a single BFE whose zeroth order 
+    term is a NFW halo}. We found that an NFW profile with a scale lenght of 25~kpc is a good zeroth-order
+    representaiton of the MWest DM halo profiles. A BFE of order $l=5$ and $n=10$ represents the 
+    structure of the halos accurately. Density fields and potential fields are within
+     5\% difference of that computed with the particle data.
+
+    \item \textbf{The halo response is mainly captured in the dipole ($l=1$) and quadruple ($l=2$) modes}. 
+    The three modes with the largest gravitational power are the $l=0$, $l=1$, and the $l=2$. 
+    The $l=0$ mode is sensitive to the enclosed mass of each halo, while the $l=1$ and the $l=2$
+    modes capture the response of the halo to the passage of the LMC-like satellite.  
+    
+    \item \textbf{The dipole captures the sloshing induced by the satellite in the host's halo}.
+    The $l=1$ mode response is induced by the recent LMC-like satellite passages, 
+    responsible for inducing the halo offset between the inner and outer halo. The peak amplitude of the dipole
+    occurs $\approx 0.5-1$ after the first pericenter of the satellite (Figure~\ref{fig:power}).
+    The magnitude of the dipoles depends on the satellite to host mass ratio
+    (Figure~\ref{fig:strength}). While the direction of the dipoles tends to be anti-aligned with the pericenter position of the 
+    LMC-like satellite and aligned with the plane of the orbit for $\sim 1.5$~Gyrs (Figure~\ref{fig:orientation}). 
+    %while the principal axis of the halo becomes more aligned with the orbit 
+    %of the LMC after pericenter 
+   
+    \item \textbf{The quadruple captures mainly the triaxial shape of the halo}:
+    All cosmological halos show a persistent quadrupole over long periods ---
+    including halos that have not experienced recent mergers in the past 5 Gyrs --- 
+    indicating that quadrupoles mainly capture the pre-existing halo triaxiality. However, 
+    we do see a peak in $l=2$ power at the pericenter of the LMC as shown in
+    Figure~\ref{fig:power}. The strength of the $l=2$ response at pericenter shows a secondary 
+    correlation with the axis ratios of the host, indicating that pre-existing triaxiality may 
+    enhance the halo response.  
+
+    \item \textbf{Dynamical Friction Wakes are present in the 18 halos with LMC-like satellites}.
+    We identified dynamical friction wakes in the 18 MWest halos. The amplitude of the dynamical friction wakes 
+    trailing the satellites peak right before the first pericentric passage of the satellite. The peak density 
+    in the Wake scales with the mass of the satellite (Figure~\ref{fig:density_contrast}).   
+
+    \item \textbf{The density in the dynamical friction wake and collective response does not constrain the merger ratio}. 
+    The density contrast in the dynamical friction wake and the collective response span the range of values previously
+    measured in both simulations and observations (Figure~\ref{fig:density_contrast}). In general, the amplitude of both the 
+    collective response and the dynamical friction wake increases with the merger mass ratios. However the scatter in the 
+    density contrast found in the MW-est halos is too large to constrain the actual merger mass ratio.
+
+    \item \textbf{Tidal index}
+
+
+    \item Observations
+     
+    %\item \textbf{The halo response before and after pericenter are captured by different halo modes}. 
+    %The $l=1$ response peaks around $0.5-1$ Gyr after the LMC reaches pericenter,  This indicates 
+    %that the dynamical friction wake, which is stronger before pericenter, is mainly captured by the $l=2$ mode, while the collective response, 
+    %which peaks after pericenter, is best captured by the $l=1$ mode as shown in Figure~\ref{fig:power}. 
+
+ 
+    
+\end{enumerate}
+%% IMPORTANT! The old "\acknowledgment" command has be depreciated. It was
+%% not robust enough to handle our new dual anonymous review requirements and
+%% thus been replaced with the acknowledgment environment. If you try to 
+%% compile with \acknowledgment you will get an error print to the screen
+%% and in the compiled pdf.
+%% 
+%% Also note that the akcnowlodgment environment does not support long amounts of text. If you have a lot of people and institutions to acknowledge, do not use this command. Instead, create a new \section{Acknowledgments}.
+\begin{acknowledgments}
+
+\end{acknowledgments}
+
+%% To help institutions obtain information on the effectiveness of their 
+%% telescopes the AAS Journals has created a group of keywords for telescope 
+%% facilities.
+%
+%% Following the acknowledgments section, use the following syntax and the
+%% \facility{} or \facilities{} macros to list the keywords of facilities used 
+%% in the research for the paper.  Each keyword is check against the master 
+%% list during copy editing.  Individual instruments can be provided in 
+%% parentheses, after the keyword, but they are not verified.
+
+\vspace{5mm}
+
+%% Similar to \facility{}, there is the optional \software command to allow 
+%% authors a place to specify which programs were used during the creation of 
+%% the manuscript. Authors should list each code and include either a
+%% citation or url to the code inside ()s when available.
+\subsubsection*{software}
+\textsc{EXP} \citep{EXP}, \textsc{Symfind} \citep{mansfield2023symfind}, \textsc{pynbody}
+\citep{Pontzen2013}, \textsc{pytreegrav} \citep{Grudic2021}
+
+
+%% Appendix material should be preceded with a single \appendix command.
+%% There should be a \section command for each appendix. Mark appendix
+%% subsections with the same markup you use in the main body of the paper.
+
+%% Each Appendix (indicated with \section) will be lettered A, B, C, etc.
+%% The equation counter will reset when it encounters the \appendix
+%% command and will number appendix equations (A1), (A2), etc. The
+%% Figure and Table counter will not reset.
+
+
+\bibliography{references}{}
+\bibliographystyle{aasjournal}
+
+\appendix
+
+
+\section{Building BFE in cosmological halos}\label{sec:appendix}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Figures/model_density_profiles.pdf}
+    \caption{Density profiles of all the halos of the \mwest simulations}\label{fig:nfw_basis}
+\end{figure}
+
+
+
+%\section{Milky Way-est Suite}\label{sec:mwest_suite}
+
+%% This command is needed to show the entire author+affiliation list when
+%% the collaboration and author truncation commands are used.  It has to
+%% go at the end of the manuscript.
+%\allauthors
+
+%% Include this line if you are using the \added, \replaced, \deleted
+%% commands to see a summary list of all changes at the end of the article.
+%\listofchanges
+
+\end{document}
+
+% End of file `sample631.tex'.
