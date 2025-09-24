@@ -1,7 +1,7 @@
 import numpy as np
 import symlib 
 import matplotlib.pyplot as plt
-from tqm import trange
+from tqdm import trange
 #from matplotlib.colors import SymLogNorm, LogNorm
 import nba
 #plt.style.use('dark_background')
@@ -75,8 +75,8 @@ if __name__ == "__main__":
     pos_smooth = p[0]["x"][is_smooth]
     # Compute density profile
     edges = np.logspace(0.1, 2.5, 100)
-    profile = nba.Profiles(pos, edges)
-    profile_smooth = nba.Profiles(pos_smooth, edges)
+    profile = nba.structure.Profiles(pos, edges)
+    profile_smooth = nba.structure.Profiles(pos_smooth, edges)
     rbins, density_profile = profile.density(smooth=1, mass=mass_dm)
     rbins_smooth, density_profile_smooth = profile_smooth.density(smooth=1, mass=mass_dm)
     np.savetxt("halo_004_density_profile.txt", np.array([rbins, density_profile]).T)
