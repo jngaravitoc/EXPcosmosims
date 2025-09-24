@@ -3,9 +3,9 @@ import symlib
 import matplotlib.pyplot as plt
 from tqdm import trange
 #from matplotlib.colors import SymLogNorm, LogNorm
+plt.style.use("./vis/matplotlib.mplstyle")
 import nba
-#plt.style.use('dark_background')
-
+from density_projections import density_projections
 
 def return_bound_particle_ids(p, subhalo_index, E_key='E_sph'):
     is_bound = (p[subhalo_index][E_key] < 0)
@@ -51,33 +51,60 @@ if __name__ == "__main__":
     SIM_PATH = "/mnt/home/aarora/ceph/Symphony/data/"
     SUITE = 'MWest'
     HALO = "Halo004"
-    SNAP = 235
     sim_dir = symlib.get_host_directory(SIM_PATH, SUITE, HALO)                                   
     part = symlib.Particles(sim_dir, include=["E_sph"]) ## for nonMW there is just E. E_sph/E in subhalo ref frame. E>0 unbound.
-    p = part.read(SNAP)
+    h, hist = symlib.read_subhalos(sim_dir)
+    #print(len(h[0]))
+    h, _ = symlib.read_subhalos(sim_dir)
+    a = symlib.scale_factors(sim_dir)
+    print(a)
+
+    Mvir = h[0,:]
+    Rvir = h[0,:]
+    Mvir_z = np.zeros(244)
+    Rvir_z = np.zeros(244)
+    for i in range(244):
+        #print(Mvir[i][1], Rvir[i][7])
+        Mvir_z[i] = Mvir[i][1]
+        Rvir_z[i] = Rvir[i][7]
 
     param = symlib.simulation_parameters(sim_dir) # or part.params
-    print(param.keys())
-    mass_dm = param["mp"]/param["h100"] # Msun physical
-    print("dm_mass:", mass_dm)
+    #print(param.keys())
+    #mass_dm = param["mp"]/param["h100"] # Msun physical
+    #print("dm_mass:", mass_dm)
+    #np.savetxt("halo_004_Mvir_Rvir.txt", np.array([Mvir_z, Rvir_z]).T)
     
-    # # particles ids associated with the LMC throughout history/current step.
-    particle_id_LMC          = p[1]['id']
-    particle_id_bound_struct = np.hstack([return_bound_particle_ids(p, subhalo_index) for subhalo_index in trange(2, len(p))])
-    to_remove_id             = np.unique(np.hstack([particle_id_LMC, particle_id_bound_struct]))
+    #SNAP = 235
+    
+    edges = np.logspace(0.1, 2.5, 101)
+    density_profile = np.zeros((244,100))
+    density_profile_smooth = np.zeros((244,100))
+    for SNAP in range(243, 244):
+        p = part.read(SNAP)
+        print(p[0])
+        fig = density_projections(p[0], R=Rvir, lim=300, vmax=10000)
+        plt.savefig("test_density.png", bbox_inches='tight')
+        plt.close()
+        """
+        # # particles ids associated with the LMC throughout history/current step.
+        particle_id_LMC          = p[1]['id']
+        particle_id_bound_struct = np.hstack([return_bound_particle_ids(p, subhalo_index) for subhalo_index in trange(2, len(p))])
+        to_remove_id             = np.unique(np.hstack([particle_id_LMC, particle_id_bound_struct]))
 
-    # # particles ids that are associated with the main branch
-    host_keep_idx = indices_to_keep(p[0]['id'], to_remove_id)
+        # # particles ids that are associated with the main branch
+        host_keep_idx = indices_to_keep(p[0]['id'], to_remove_id)
 
-    # pos, vel = p[0]["x"][is_smooth], p[0]["v"][is_smooth] ## 0 is the main host in each snapshot. 
-    pos = p[0]["x"]## 0 is the main host in each snapshot. 
-    is_smooth = p[0]["smooth"] ## particles that are accreted smoothly 
-    pos_smooth = p[0]["x"][is_smooth]
-    # Compute density profile
-    edges = np.logspace(0.1, 2.5, 100)
-    profile = nba.structure.Profiles(pos, edges)
-    profile_smooth = nba.structure.Profiles(pos_smooth, edges)
-    rbins, density_profile = profile.density(smooth=1, mass=mass_dm)
-    rbins_smooth, density_profile_smooth = profile_smooth.density(smooth=1, mass=mass_dm)
-    np.savetxt("halo_004_density_profile.txt", np.array([rbins, density_profile]).T)
+        # pos, vel = p[0]["x"][is_smooth], p[0]["v"][is_smooth] ## 0 is the main host in each snapshot. 
+        pos = p[0]["x"]## 0 is the main host in each snapshot. 
+        is_smooth = p[0]["smooth"] ## particles that are accreted smoothly 
+        pos_smooth = p[0]["x"][is_smooth]
+        # Compute density profile
+        profile = nba.structure.Profiles(pos, edges)
+        profile_smooth = nba.structure.Profiles(pos_smooth, edges)
+        rbins, density_profile[SNAP] = profile.density(smooth=1, mass=mass_dm)
+        _, density_profile_smooth[SNAP] = profile_smooth.density(smooth=1, mass=mass_dm)
+        """
+    #np.savetxt("halo_004_density_profile.txt", density_profile)
+    #np.savetxt("halo_004_density_profile_smooth.txt", density_profile_smooth)
     # Make image
+    
