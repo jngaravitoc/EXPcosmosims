@@ -55,7 +55,6 @@ if __name__ == "__main__":
     sim_dir = symlib.get_host_directory(SIM_PATH, SUITE, HALO)                                   
     part = symlib.Particles(sim_dir, include=["E_sph"]) ## for nonMW there is just E. E_sph/E in subhalo ref frame. E>0 unbound.
     p = part.read(SNAP)
-
     param = symlib.simulation_parameters(sim_dir) # or part.params
     print(param.keys())
     mass_dm = param["mp"]/param["h100"] # Msun physical
