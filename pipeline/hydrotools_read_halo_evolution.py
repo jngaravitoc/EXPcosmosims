@@ -195,11 +195,16 @@ if __name__ == "__main__":
 
     # TODO: update for tng35-dark if needed
     PARTICLE_MASS = 3.2e8
-    SUBFIND_IDS_FILE = "tng35-3-dark_halo_021537.txt"
+    SUBFIND_IDS_FILE = "tng35-3-dark_halo_sample.txt"
 
     
-    subfind_ids, snaps, time, redshift = np.loadtxt(SUBFIND_IDS_FILE, unpack=True)
+    data = np.loadtxt(SUBFIND_IDS_FILE)
     
+    snaps = data[:,0]
+    time = data[:,2]
+    redshift = data[:,1]
+    subfind_ids = data[:,4]
+
     all_coords = []
     all_vels = []
 
@@ -209,7 +214,8 @@ if __name__ == "__main__":
     all_oshs_coords = []
     all_oshs_vels = []
 
-    for i in range(1, len(subfind_ids)):
+    for i in range(90, 99):
+    #    try:
         print(i, int(subfind_ids[i]))
         iface_run.extractGalaxyData(
             num_processes = 12, 
@@ -224,7 +230,7 @@ if __name__ == "__main__":
             output_path = None, 
             buffered_output = False, 
             output_compression = 'gzip',
-            extract_satellites = False,
+            extract_satellites = True,
             n_max_extract=None,
             catsh_get = True, 
             catsh_fields = common_fields.default_catsh_fields_dark, 
@@ -233,21 +239,23 @@ if __name__ == "__main__":
             tree_get=True,
             tree_fields=['subfind_id', 'is_primary'],
             ptldm_get = True, 
-            ptldm_fields = ['Coordinates', 'Velocities', 'oshs_Coordinates', 'fuzz_Coordinates'], 
-            ptl_in_rad_get = True, 
-            save_ptl_sep = True, 
-            ptl_rad = 1.5, 
+            ptldm_fields = ['Coordinates', 'Velocities','Masses','oshs_Coordinates', 'fuzz_Coordinates'], 
+            ptl_in_rad_get = False, 
+            #ave_ptl_sep = True, 
+            #ptl_rad = None, # 1.5 
             ptl_rad_units = '200m',
             profile_get = False, 
             profile_fields = [])
-    
-        
+     #except (Exception):
+     #continue
+   
+        """
         snapshot_file = f"galaxies_tng50-3-dark_{i:03d}.hdf5"
 
         with h5py.File(snapshot_file, "r") as f:
             coord_keys, vel_keys = find_particle_keys(f)
-            coords = [np.array(h5file[k]) for k in coord_keys]
-            vels   = [np.array(h5file[k]) for k in vel_keys]
+            coords = [np.array(f[k]) for k in coord_keys]
+            vels   = [np.array(f[k]) for k in vel_keys]
 
             
             for k in coord_keys:
@@ -267,10 +275,10 @@ if __name__ == "__main__":
                     all_oshs_vels.append(arr)
                 else:
                     all_vels.append(arr)
-
          
     write_one_single_hdf5(
         filename, snaps, redshift, time,
         all_coords, all_vels,  
         all_fuzz_coords, all_fuzz_vels,
         all_oshs_coords, all_oshs_vels)
+    """
