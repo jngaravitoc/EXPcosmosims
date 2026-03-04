@@ -1,11 +1,67 @@
+"""Read halo evolution data produced by hydrotools_get_subfind_ids.py.
+
+For each simulation in the shared SIMS list, this script:
+
+1. Reads the ``<sim>_halo_sample.txt`` subfind-ID table produced by
+   ``hydrotools_get_subfind_ids.py``.
+2. Calls ``extractGalaxyData`` snapshot-by-snapshot to retrieve particle
+   and catalogue data for the tracked halo.
+3. Optionally writes per-snapshot HDF5 files with particle coordinates,
+   velocities, and halo-level quantities.
+
+The directory layout mirrors ``hydrotools_get_subfind_ids.py``::
+
+    <output_path>/data/<sim>/<sim>_halo_sample.txt      (input, from get_subfind_ids)
+    <output_path>/data/<sim>/galaxies_<sim>_<snap>.hdf5  (hydrotools output)
+    <output_path>/data/<sim>/processed/                  (optional post-processed files)
+
+Usage
+-----
+    python hydrotools_read_halo_evolution.py [--output-path .] [--sims tng35-3-dark] \\
+                                             [--snap-start 90] [--snap-end 99]
+"""
+
 import os
-import glob
-import sys
+import argparse
 import h5py
 import numpy as np
 from hydrotools.core import interface as iface_run
-from hydrotools.common import simulations as common_sims
 from hydrotools.common import fields as common_fields
+
+
+# ---------------------------------------------------------------------------
+# Simulation catalogue  (keep in sync with hydrotools_get_subfind_ids.py)
+# ---------------------------------------------------------------------------
+
+SIMS = [
+    'tng35',
+    'tng35-2',
+    'tng35-3',
+    'tng35-dark',
+    'tng75',
+    'tng75-2',
+    'tng75-3',
+    'tng75-3-dark',
+    'tng75-dark',
+]
+
+# Particle masses in Msun for each resolution level
+PARTICLE_MASSES = {
+    'tng35':        4.5e6,
+    'tng35-2':      3.6e7,
+    'tng35-3':      2.9e8,
+    'tng35-dark':   5.4e6,
+    'tng75':        4.5e6,
+    'tng75-2':      3.6e7,
+    'tng75-3':      2.9e8,
+    'tng75-3-dark': 4.8e8,
+    'tng75-dark':   5.4e6,
+}
+
+
+def is_dark_sim(sim_name: str) -> bool:
+    """Return True if *sim_name* is a dark-matter-only run."""
+    return sim_name.endswith('-dark')
 
 
 def read_particle_data(h5file):
@@ -177,108 +233,184 @@ def find_particle_keys(h5file):
     return coord_keys, vel_keys
 
 
-if __name__ == "__main__":
+def load_subfind_ids(ids_file: str) -> dict:
+    """Load the subfind-ID table written by ``hydrotools_get_subfind_ids.py``.
 
-    ###############################################################################
-    # Input parameters
-    ###############################################################################
+    Parameters
+    ----------
+    ids_file : str
+        Path to ``<sim>_halo_sample.txt``.
 
-    #DATAFILE = './galaxies_tng50-3-dark_099.hdf5'
-    SIMULATION = "tng35-3-dark"
-    #SNAP_IDX = 99
-
-    IDS_DATAFILE = f'./galaxies_{SIMULATION}_099_ids.hdf5'
-
-    #UTPATH_DIR = "./processed_halos"
-    filename = "test_halo.hdf5"
-    #s.makedirs(OUTPATH_DIR, exist_ok=True)
-
-    # TODO: update for tng35-dark if needed
-    PARTICLE_MASS = 3.2e8
-    SUBFIND_IDS_FILE = "tng35-3-dark_halo_sample.txt"
-
-    
-    data = np.loadtxt(SUBFIND_IDS_FILE)
-    
-    snaps = data[:,0]
-    time = data[:,2]
-    redshift = data[:,1]
-    subfind_ids = data[:,4]
-
-    all_coords = []
-    all_vels = []
-
-    all_fuzz_coords = []
-    all_fuzz_vels = []
-
-    all_oshs_coords = []
-    all_oshs_vels = []
-
-    for i in range(90, 99):
-    #    try:
-        print(i, int(subfind_ids[i]))
-        iface_run.extractGalaxyData(
-            num_processes = 12, 
-            machine_name='umdastro',
-            sim = SIMULATION, 
-            snap_idx = i,
-            no_snapshots = False, 
-            paranoid = True, 
-            verbose = False,
-            mass_selection_type='idxs',
-            sh_idxs=[int(subfind_ids[i])],
-            output_path = None, 
-            buffered_output = False, 
-            output_compression = 'gzip',
-            extract_satellites = True,
-            n_max_extract=None,
-            catsh_get = True, 
-            catsh_fields = common_fields.default_catsh_fields_dark, 
-            catgrp_get = True, 
-            catgrp_fields = common_fields.default_catgrp_fields_all,
-            tree_get=True,
-            tree_fields=['subfind_id', 'is_primary'],
-            ptldm_get = True, 
-            ptldm_fields = ['Coordinates', 'Velocities','Masses','oshs_Coordinates', 'fuzz_Coordinates'], 
-            ptl_in_rad_get = False, 
-            #ave_ptl_sep = True, 
-            #ptl_rad = None, # 1.5 
-            ptl_rad_units = '200m',
-            profile_get = False, 
-            profile_fields = [])
-     #except (Exception):
-     #continue
-   
-        """
-        snapshot_file = f"galaxies_tng50-3-dark_{i:03d}.hdf5"
-
-        with h5py.File(snapshot_file, "r") as f:
-            coord_keys, vel_keys = find_particle_keys(f)
-            coords = [np.array(f[k]) for k in coord_keys]
-            vels   = [np.array(f[k]) for k in vel_keys]
-
-            
-            for k in coord_keys:
-                arr = np.array(f[k])
-                if "fuzz" in k:
-                    all_fuzz_coords.append(arr)
-                elif "oshs" in k:
-                    all_oshs_coords.append(arr)
-                else:
-                    all_coords.append(arr)
-    
-            for k in vel_keys:
-                arr = np.array(f[k])
-                if "fuzz" in k:
-                    all_fuzz_vels.append(arr)
-                elif "oshs" in k:
-                    all_oshs_vels.append(arr)
-                else:
-                    all_vels.append(arr)
-         
-    write_one_single_hdf5(
-        filename, snaps, redshift, time,
-        all_coords, all_vels,  
-        all_fuzz_coords, all_fuzz_vels,
-        all_oshs_coords, all_oshs_vels)
+    Returns
+    -------
+    dict
+        Keys: ``snaps``, ``redshifts``, ``times``, ``subfind_ids``
+        (the latter is a 2-D array, one row per halo tracked).
     """
+    data = np.loadtxt(ids_file)
+    return {
+        "snaps":       data[:, 0].astype(int),
+        "redshifts":   data[:, 1],
+        "times":       data[:, 2],
+        "subfind_ids": data[:, 3:].astype(int),  # may have >1 halo column
+    }
+
+
+def extract_snapshot(
+    sim: str,
+    snap_idx: int,
+    subfind_id: int,
+    output_dir: str,
+) -> str:
+    """Run ``extractGalaxyData`` for one snapshot of the tracked halo.
+
+    Parameters
+    ----------
+    sim : str
+        Simulation name.
+    snap_idx : int
+        Snapshot index.
+    subfind_id : int
+        Subfind ID of the halo at this snapshot.
+    output_dir : str
+        Directory for hydrotools output files.
+
+    Returns
+    -------
+    str
+        Path to the output HDF5 file.
+    """
+    catsh_fields = (
+        common_fields.default_catsh_fields_dark
+        if is_dark_sim(sim)
+        else common_fields.default_catsh_fields_all
+    )
+
+    iface_run.extractGalaxyData(
+        num_processes=12,
+        machine_name='umdastro',
+        sim=sim,
+        snap_idx=snap_idx,
+        no_snapshots=False,
+        paranoid=True,
+        verbose=False,
+        mass_selection_type='idxs',
+        sh_idxs=[subfind_id],
+        output_path=output_dir,
+        buffered_output=False,
+        output_compression='gzip',
+        extract_satellites=True,
+        n_max_extract=None,
+        catsh_get=True,
+        catsh_fields=catsh_fields,
+        catgrp_get=True,
+        catgrp_fields=common_fields.default_catgrp_fields_all,
+        tree_get=True,
+        tree_fields=['subfind_id', 'is_primary'],
+        ptldm_get=False,
+        ptl_rad_units='200m',
+        profile_get=False,
+        profile_fields=[],
+    )
+
+    return os.path.join(output_dir, f'galaxies_{sim}_{snap_idx:03d}.hdf5')
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
+
+def parse_args() -> argparse.Namespace:
+    """Parse command-line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Read halo evolution from hydrotools_get_subfind_ids.py output.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=__doc__,
+    )
+    parser.add_argument(
+        '--output-path', type=str, default='.',
+        help=(
+            "Root output directory (same as used in hydrotools_get_subfind_ids.py).  "
+            "Data is read/written under <output_path>/data/<sim>/  (default: '.')"
+        ),
+    )
+    parser.add_argument(
+        '--sims', nargs='+', default=None,
+        help="Subset of simulations to process (default: all in SIMS).",
+    )
+    parser.add_argument(
+        '--snap-start', type=int, default=90,
+        help="First snapshot to extract (default: 90).",
+    )
+    parser.add_argument(
+        '--snap-end', type=int, default=99,
+        help="Last snapshot to extract, exclusive (default: 99).",
+    )
+    parser.add_argument(
+        '--halo-col', type=int, default=0,
+        help="Column index (0-based) of the halo to track in the subfind_ids table (default: 0).",
+    )
+    return parser.parse_args()
+
+
+def main() -> None:
+    """Entry point: loop over simulations and snapshots."""
+    args = parse_args()
+    sims = args.sims if args.sims else SIMS
+
+    for sim in sims:
+        print(f"\n{'='*60}")
+        print(f"Processing {sim}")
+        print(f"{'='*60}")
+
+        sim_dir = os.path.join(args.output_path, 'data', sim)
+        ids_file = os.path.join(sim_dir, f'{sim}_halo_sample.txt')
+
+        if not os.path.isfile(ids_file):
+            print(f"  [skip] {ids_file} not found — run hydrotools_get_subfind_ids.py first")
+            continue
+
+        table = load_subfind_ids(ids_file)
+        snaps       = table["snaps"]
+        redshifts   = table["redshifts"]
+        times       = table["times"]
+        subfind_ids = table["subfind_ids"]
+
+        # Select which halo column to track
+        if subfind_ids.ndim == 1:
+            halo_ids = subfind_ids
+        else:
+            halo_ids = subfind_ids[:, args.halo_col]
+
+        for snap_idx in range(args.snap_start, args.snap_end):
+            if snap_idx >= len(snaps):
+                print(f"  [skip] snap {snap_idx} out of range (max {len(snaps)-1})")
+                break
+
+            sid = int(halo_ids[snap_idx])
+            print(f"  snap {snap_idx:3d}  z={redshifts[snap_idx]:.3f}  subfind_id={sid}")
+
+            datafile = extract_snapshot(
+                sim=sim,
+                snap_idx=snap_idx,
+                subfind_id=sid,
+                output_dir=sim_dir,
+            )
+
+            if not os.path.isfile(datafile):
+                print(f"    [WARNING] Expected output not found: {datafile}")
+                continue
+
+            # ----------------------------------------------------------
+            # Optional: read back & post-process particle data here
+            # ----------------------------------------------------------
+            # with h5py.File(datafile, "r") as f:
+            #     pdata = read_particle_data(f)
+            #     coord_keys, vel_keys = find_particle_keys(f)
+            #     ...
+
+    print("\nDone.")
+
+
+if __name__ == "__main__":
+    main()
