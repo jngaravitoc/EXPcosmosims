@@ -291,6 +291,15 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--sim-name",
+        type=str,
+        default=None,
+        help=(
+            "Simulation name used in output filenames, e.g. 'tng50-3-dark'.  "
+            "If not given, it is inferred from the datafile template."
+        ),
+    )
+    parser.add_argument(
         "--snap-start",
         type=int,
         default=79,
@@ -334,9 +343,25 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def _infer_sim_name(datafile_template: str) -> str:
+    """Try to extract a simulation name from the datafile template.
+
+    Looks for a pattern like ``galaxies_<sim-name>_{:03d}.hdf5`` and returns
+    the ``<sim-name>`` portion.  Falls back to ``'halo'`` if parsing fails.
+    """
+    import re
+    basename = os.path.basename(datafile_template)
+    m = re.match(r"galaxies_(.+?)_\{", basename)
+    if m:
+        return m.group(1)
+    return "halo"
+
+
 def main() -> None:
     """Entry point for the halo-evolution analysis script."""
     args = parse_args()
+
+    sim_name = args.sim_name if args.sim_name else _infer_sim_name(args.datafile)
 
     outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
@@ -354,7 +379,7 @@ def main() -> None:
         snap_start=args.snap_start,
         nsnaps=args.nsnaps,
     )
-    evo_path = outdir / "halo_evolution.png"
+    evo_path = outdir / f"{sim_name}_halo_evolution.png"
     fig_evo.savefig(evo_path, dpi=150, bbox_inches="tight")
     print(f"Saved evolution figure → {evo_path}")
 
@@ -368,7 +393,7 @@ def main() -> None:
             print(f"  [skip] {datafile} not found")
             continue
         fig_part = plot_halo_particles(args.datafile, snap)
-        part_path = outdir / f"halo_particles_{snap:03d}.png"
+        part_path = outdir / f"{sim_name}_halo_particles_{snap:03d}.png"
         fig_part.savefig(part_path, dpi=150, bbox_inches="tight")
         plt.close(fig_part)
         print(f"  Saved particle figure → {part_path}")
